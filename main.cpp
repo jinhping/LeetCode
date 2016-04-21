@@ -441,19 +441,7 @@ void rotate(vector<vector<int>>& matrix) {
     }
 }
 
-bool searchMatrix(vector<vector<int>>& matrix, int target) {
-    int m = matrix.size();
-    int n = matrix[0].size();
 
-    for(int i = 0; i < m; i++ ){
-        for(int j = 0; j < n; j++){
-            
-        }
-    }
-
-    return TRUE;
-
-}
 
 int integerBreak(int n) {
     if(n == 2 )  return 1;
@@ -462,14 +450,35 @@ int integerBreak(int n) {
     if(n == 5 )  return 6;
     if(n == 6 )  return 9;
     return 3*integerBreak(n-3);
+}
 
 
+bool searchMatrix(vector<vector<int> >& matrix, int target) {
+    
+    int i = 0;
+    int j = matrix[0].size() - 1;    
 
-   
+    while(i < matrix.size() && j>= 0){
+        if(matrix[i][j]  == target){
+            return true;
+        }
+
+        if(matrix[i][j] < target){
+            i++;
+        }else{
+            j--;
+        }
     }
+    return false;
+}
+
+
 int main(){
 
-    cout << "test " ;
+    vector<vector<int> > matrix = {{1,3,5}};
+    int target = 1;
+
+    cout << searchMatrix(matrix, target) << endl;
 
     return 0;
 
