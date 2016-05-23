@@ -455,7 +455,7 @@ int integerBreak(int n) {
 
 bool searchMatrix(vector<vector<int> >& matrix, int target) {
     
-    int i = 0;
+    unsigned long i = 0;
     int j = matrix[0].size() - 1;    
 
     while(i < matrix.size() && j>= 0){
@@ -472,13 +472,107 @@ bool searchMatrix(vector<vector<int> >& matrix, int target) {
     return false;
 }
 
+struct TreeNode {
+   int val;
+    TreeNode *left;
+     TreeNode *right;
+     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+};
 
+void helperRightSideView(TreeNode * root, unsigned long level, vector<int> &result){
+
+    if(root == NULL) return;
+    if( result.size() < level ) result.push_back(root->val);
+    helperRightSideView(root -> right, level+1, result);
+    helperRightSideView(root -> left, level+1, result);
+}
+
+vector<int> rightSideView(TreeNode* root) {
+    vector<int> result;
+
+    helperRightSideView(root,1,result);
+
+    return result;
+}
+
+
+
+int lengthOfLIS(vector<int>& nums) {
+    vector<int> result(nums.size(), 1);
+    if(nums.size() == 1 ) return 1;
+    if(nums.size() == 0) return 0;
+    int min = 0;
+unsigned long i;
+    for(i = 1; i < nums.size(); i++){
+        if(nums[i] > nums[i-1]){
+            min = nums[i-1];
+            break;
+        }
+    }
+    cout << "min: " << min << endl; 
+
+    for(unsigned long j = i ; j<nums.size(); j++){
+
+        if(nums[j] > min ){
+            result[j] = result[j-1] + 1;
+            min = nums[j];
+        }else{
+            result[j] = result[j-1];
+        }
+
+    }
+     for(unsigned long k = 0; k < result.size(); k++){
+        cout << result[k] <<  " ";
+
+    }
+    cout << endl;
+    sort(result.begin(), result.end());
+
+    for(unsigned long k = 0; k < result.size(); k++){
+        cout << result[k] <<  " ";
+
+    }
+    cout << endl;
+
+    return result[result.size()-1];
+}
+
+
+
+string reverseString(string s) {
+    int length = s.length();
+    bool even = true;
+    if(length%2 ){
+        even = false;
+    }
+    
+    if(even){   
+        int end = length; 
+        for(int i = 0; i < length/2; i++){
+            char tmp = s[i];
+            s[i] = s[end-1];
+            s[end-1] = tmp;
+            end --;
+        }
+        return s;
+    }else{
+        int end = length;
+        for(int i = 0; i < (length - 1)/2; i++){
+            char tmp = s[i];
+            s[i] = s[end-1];
+            s[end-1] = tmp;
+            end --;
+        }
+        return s;
+    }
+}
 int main(){
 
-    vector<vector<int> > matrix = {{1,3,5}};
-    int target = 1;
+    vector<int> v = {10,9,2,5,3,7,101,18};
+    vector<int> v2={1,3,6,7,9,4,10,5,6};
+    lengthOfLIS(v2);
 
-    cout << searchMatrix(matrix, target) << endl;
+
 
     return 0;
 
