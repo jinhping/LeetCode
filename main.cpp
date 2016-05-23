@@ -497,47 +497,6 @@ vector<int> rightSideView(TreeNode* root) {
 
 
 
-int lengthOfLIS(vector<int>& nums) {
-    vector<int> result(nums.size(), 1);
-    if(nums.size() == 1 ) return 1;
-    if(nums.size() == 0) return 0;
-    int min = 0;
-unsigned long i;
-    for(i = 1; i < nums.size(); i++){
-        if(nums[i] > nums[i-1]){
-            min = nums[i-1];
-            break;
-        }
-    }
-    cout << "min: " << min << endl; 
-
-    for(unsigned long j = i ; j<nums.size(); j++){
-
-        if(nums[j] > min ){
-            result[j] = result[j-1] + 1;
-            min = nums[j];
-        }else{
-            result[j] = result[j-1];
-        }
-
-    }
-     for(unsigned long k = 0; k < result.size(); k++){
-        cout << result[k] <<  " ";
-
-    }
-    cout << endl;
-    sort(result.begin(), result.end());
-
-    for(unsigned long k = 0; k < result.size(); k++){
-        cout << result[k] <<  " ";
-
-    }
-    cout << endl;
-
-    return result[result.size()-1];
-}
-
-
 
 string reverseString(string s) {
     int length = s.length();
@@ -688,17 +647,138 @@ vector<int> intersect(vector<int>& nums1, vector<int>& nums2) {
 
 }
 
+int lengthOfLIS(vector<int>& nums) {
+    vector<int> result(nums.size(), 1);
+    if(nums.size() == 1 ) return 1;
+    if(nums.size() == 0) return 0;
+    int min = 0;
+    unsigned long i;
+    for(i = 1; i < nums.size(); i++){
+        if(nums[i] > nums[i-1]){
+            min = nums[i-1];
+            break;
+        }
+    }
+    cout << "min: " << min << endl; 
+
+    for(unsigned long j = i ; j<nums.size(); j++){
+
+        if(nums[j] > min ){
+            result[j] = result[j-1] + 1;
+            min = nums[j];
+        }else{
+            result[j] = result[j-1];
+        }
+
+    }
+     for(unsigned long k = 0; k < result.size(); k++){
+        cout << result[k] <<  " ";
+
+    }
+    cout << endl;
+    sort(result.begin(), result.end());
+
+    for(unsigned long k = 0; k < result.size(); k++){
+        cout << result[k] <<  " ";
+
+    }
+    cout << endl;
+
+    return result[result.size()-1];
+}
+
+bool binary_search(unsigned long m, unsigned long beginning, unsigned long end, vector<vector<int>> &matrix,  int target, bool &result){
+    
+    if(end < beginning) return false;
+    else if(end == beginning){
+        if(matrix[m][beginning] == target){
+            result = true;
+            return true;
+        } 
+        else return false;
+    }
+    int mid = (end+beginning+1)/2;
+    cout << "mid: " << mid << endl;
+    cout << "8: " << matrix[m][mid] << "99: " << target << endl;
+    if(matrix[m][mid] == target){
+      //  cout << "10 ---- " << endl;
+        result = true;
+        return true;
+     //   cout << "11 ------  " << endl;
+    }
+    else if(matrix[m][mid] < target){
+      //  cout << "13 ------  " << endl;
+
+        beginning = mid;
+        binary_search(m,beginning,end,matrix,target,result);
+    }
+    else if(matrix[m][mid] > target){
+    //    cout << "14 ------  " << endl;
+
+        end = mid -1;
+        binary_search(m,beginning,end,matrix,target,result);
+    }
+    cout << "12 ------  " << endl;
+    return false;
+}
+
+bool searchMatrix_2nd(vector<vector<int>>& matrix, int target) {
+    // 先确定哪一行 再做binary search 
+    int m = -1; // 哪一个row 的 index
+    bool exist = false;
+    cout << "1111 " << endl; 
+    for(unsigned long i = 0; i < matrix.size();i++){
+        if(matrix[i][0] == target){
+                cout << "2222 " << endl; 
+
+            return true;
+        }
+        else if(matrix[i][0] < target){
+                cout << "3333 " << endl; 
+            exist = true;
+            m = i;
+        }
+
+    }
+        cout << "44444 " << endl; 
+    if(exist == false) return false;
+    cout << "5555 " << endl;
+    cout << "m: " << m << endl;
+    cout << matrix[m][matrix[0].size()-1] << endl;
+    cout << "target: " << target << endl;
+    if(matrix[m][matrix[0].size()-1] == target){
+            cout << "6666 " << endl;
+
+        return true;
+    }
+    else if(matrix[m][matrix[0].size()-1] < target){
+            cout << "7777 " << endl;
+
+        return false;
+    }
+
+
+    // 确定可能在 index 为 m 的这一行里 之后做 binary search
+    unsigned long n = matrix[0].size()-1;
+
+    cout << "m: " << m << endl;
+    cout << "n: " << n << endl;
+    bool result = false;
+    binary_search(m,0,n,matrix,target,result);
+    return result;
+}
+
 
 int main(){
+   
+   vector<vector<int>> matrix = {{1,3,5,7}};
+   int target = 4;
+    cout <<   searchMatrix_2nd(matrix,target) << endl;
 
-    vector<int> v = {10,9,2,5,3,7,101,18};
-    vector<int> v2={1,3,6,7,9,4,10,5,6};
-    lengthOfLIS(v2);
 
 
 
     return 0;
-
 }
 
 
