@@ -642,6 +642,53 @@ TreeNode* invertTree(TreeNode* root) {
     }
     return root;
 }
+
+
+vector<int> intersection(vector<int>& nums1, vector<int>& nums2) {
+    unordered_set<int> s1;
+    unordered_set<int> s2;
+    
+    for(unsigned long i = 0; i < nums1.size(); i++){
+        s1.insert(nums1[i]);
+    }
+    for(unsigned long i = 0; i < nums2.size(); i++){
+        s2.insert(nums2[i]);
+    } 
+        vector<int> result;
+    for(auto i = s2.begin(); i != s2.end(); i++){
+        if(s1.find(*i) != s1.end()){
+            result.push_back(*i);
+
+        }
+    }
+
+
+    return result;
+}
+
+
+vector<int> intersect(vector<int>& nums1, vector<int>& nums2) {
+    vector<int> result;
+    unordered_map<int ,int> m;
+    for(unsigned long i = 0; i < nums1.size(); i++){
+        if(m.find(nums1[i] )== m.end()){
+            m[nums1[i]] = 1;
+        }else{
+            m[nums1[i]]++;
+        }
+    }
+
+    for(unsigned long i = 0; i< nums2.size();i++){
+        if(m.find(nums2[i]) != m.end() && m[nums2[i]] != 0){
+            result.push_back(nums2[i]);
+            m[nums2[i]]--;
+        }
+    }
+    return result;
+
+}
+
+
 int main(){
 
     vector<int> v = {10,9,2,5,3,7,101,18};
