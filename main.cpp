@@ -566,6 +566,82 @@ string reverseString(string s) {
         return s;
     }
 }
+
+
+
+void invertTree_helper(TreeNode * root){
+    if(root -> left != NULL && root ->right != NULL){
+
+        TreeNode *tmp = new TreeNode(root->left->val);
+        tmp -> left = root -> left -> left;
+        tmp -> right = root -> left -> right;
+    
+        root -> left = root -> right;
+        root -> right = tmp;
+    }
+    if(root -> left !=NULL && root -> right == NULL){
+        TreeNode *tmp = new TreeNode(root->left->val);
+        tmp -> left = root -> left -> left;
+        tmp -> right = root -> left -> right;
+
+        root -> left = NULL;
+        root -> right = tmp;
+    }else if(root -> right !=NULL && root -> left == NULL){
+        TreeNode *tmp = new TreeNode(root->right->val);
+        tmp -> left = root -> right -> left;
+        tmp -> right = root -> right -> right;
+
+        root -> left = tmp;
+        root -> right = NULL;
+    }
+
+    if(root -> left != NULL){
+       invertTree_helper(root -> left); 
+    }
+    if(root -> right != NULL){
+        invertTree_helper(root -> right);
+    }
+    return;
+}
+
+TreeNode* invertTree(TreeNode* root) {
+    if(root == NULL){
+        return root;
+    }
+
+    if(root -> left != NULL && root ->right != NULL){
+        TreeNode *tmp = new TreeNode(root->left->val);
+        tmp -> left = root -> left -> left;
+        tmp -> right = root -> left -> right;
+
+        root -> left = root -> right;
+        root -> right = tmp;
+    }
+
+    if(root -> left !=NULL && root -> right == NULL){
+        TreeNode *tmp = new TreeNode(root->left->val);
+        tmp -> left = root -> left -> left;
+        tmp -> right = root -> left -> right;
+
+        root -> left = NULL;
+        root -> right = tmp;
+    }else if(root -> right !=NULL && root -> left == NULL){
+        TreeNode *tmp = new TreeNode(root->right->val);
+         tmp -> left = root -> right -> left;
+        tmp -> right = root -> right -> right;
+
+        root -> left = tmp;
+        root -> right = NULL;
+    }
+    
+    if(root -> left != NULL){
+       invertTree_helper(root -> left); 
+    }
+    if(root -> right != NULL){
+        invertTree_helper(root -> right);
+    }
+    return root;
+}
 int main(){
 
     vector<int> v = {10,9,2,5,3,7,101,18};
