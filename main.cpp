@@ -788,6 +788,39 @@ int findKthLargest(vector<int>& nums, int k) {
     return nums[size-k];
             
 }
+
+void setZeroes(vector<vector<int>>& matrix) {
+
+    unordered_set<int> column;
+    unordered_set<int> row;
+
+    int m = matrix.size();
+    int n = matrix[0].size();
+
+    for(int i = 0; i < m; i++){
+        for(int j = 0; j < n; j++){
+            if(matrix[i][j] == 0){
+                row.insert(i);
+                column.insert(j);
+            }
+        }
+    }
+
+    for(auto itr = row.begin(); itr != row.end(); itr ++){
+        for(int j = 0; j < n ; j++){
+            matrix[*itr][j] = 0;
+        }
+    }
+
+    for(auto itr = column.begin(); itr != column.end(); itr ++){
+        for(int i = 0; i < m ; i++){
+            matrix[i][*itr] = 0;
+        }
+    }
+
+    return;
+
+}
 int main(){
    
     vector<int> nums = {-1,-1,3,3,4,5,5};
