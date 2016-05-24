@@ -821,11 +821,28 @@ void setZeroes(vector<vector<int>>& matrix) {
     return;
 
 }
+
+int findPeakElement(vector<int>& nums) {
+
+    if(nums.size() == 1 ) return 0;
+    int index = 0;
+    for(unsigned long i = 1; i < nums.size(); i++){
+        if(nums[i] > nums[i-1]){
+            index = i;
+        }else{
+            break;
+        }
+    }
+    return index;
+}
+
+
+
 int main(){
    
-    vector<int> nums = {-1,-1,3,3,4,5,5};
-    int k = 2;
-    cout << findKthLargest(nums,k) << endl;
+    vector<int> nums = {5,2,3,4,5,4};
+    
+    cout << findPeakElement(nums)<< endl;
 
 
 
