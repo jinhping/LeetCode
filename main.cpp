@@ -781,9 +781,18 @@ bool increasingTriplet(vector<int>& nums) {
     }
     return false;
 }
+
+int findKthLargest(vector<int>& nums, int k) {
+    sort(nums.begin(),nums.end());
+    int size = nums.size();
+    return nums[size-k];
+            
+}
 int main(){
    
-
+    vector<int> nums = {-1,-1,3,3,4,5,5};
+    int k = 2;
+    cout << findKthLargest(nums,k) << endl;
 
 
 
