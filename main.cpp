@@ -11,6 +11,7 @@
 #include <cstdlib>
 #include <cmath>
 #include <sstream>
+#include <climits>
 
 
 using namespace std;
@@ -713,12 +714,10 @@ bool binary_search(unsigned long m, unsigned long beginning, unsigned long end, 
         binary_search(m,beginning,end,matrix,target,result);
     }
     else if(matrix[m][mid] > target){
-    //    cout << "14 ------  " << endl;
 
         end = mid -1;
         binary_search(m,beginning,end,matrix,target,result);
     }
-    cout << "12 ------  " << endl;
     return false;
 }
 
@@ -768,12 +767,22 @@ bool searchMatrix_2nd(vector<vector<int>>& matrix, int target) {
     return result;
 }
 
-
+bool increasingTriplet(vector<int>& nums) {
+    int a = INT_MAX;
+    int b = INT_MAX;
+    for(int x : nums){
+        if(x <= a){
+            a = x;
+        }
+        else if( x <= b){
+            b = x;
+        }
+        else return true;
+    }
+    return false;
+}
 int main(){
    
-   vector<vector<int>> matrix = {{1,3,5,7}};
-   int target = 4;
-    cout <<   searchMatrix_2nd(matrix,target) << endl;
 
 
 
