@@ -836,7 +836,22 @@ int findPeakElement(vector<int>& nums) {
     return index;
 }
 
+int sumNumbers_helper(TreeNode *root, int result){
+    if(root == NULL){
+        return 0;
+    }
+    if(root->left == NULL && root->right == NULL){
+        return result*10 + root -> val;
+    }
 
+    return sumNumbers_helper(root->left, result*10 + root->val) + sumNumbers_helper(root->right,result* 10 + root->val);
+
+}
+int sumNumbers(TreeNode* root) {
+    int result = sumNumbers_helper(root, 0);
+    return result;
+
+}
 
 int main(){
    
