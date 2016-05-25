@@ -853,11 +853,59 @@ int sumNumbers(TreeNode* root) {
 
 }
 
+
+
+int removeDuplicates(vector<int>& nums) {
+    vector<int> tmp; 
+    unordered_map<int,int> m;
+        cout << "4444  " << endl;
+
+    for(unsigned long i = 0; i < nums.size(); i++){
+        if(m.find(nums[i]) != m.end()){
+            m[nums[i]] = 2;
+        }else{
+            m[nums[i]] = 1;
+        }
+    }
+
+    set<int> s;
+    for(unsigned long i =0; i< nums.size(); i++){
+        s.insert(nums[i]);
+    }
+
+
+    cout << "11111  " << endl;
+    for(auto i = s.begin(); i != s.end(); i++){
+        if(m[*i] == 1){
+            tmp.push_back(*i);
+        }else{
+            tmp.push_back(*i);
+            tmp.push_back(*i);
+        }
+    }
+    cout << "22222 " << endl;
+
+    int size = tmp.size();
+    cout << "size: " << size << endl;
+    cout << "tmp.size() " << tmp.size() << endl;
+        cout << "33333 " << endl;
+
+    for(unsigned long i = 0; i < tmp.size(); i++){
+        nums[i] = tmp[i];
+    }
+
+    cout << "5555  " << endl;
+
+    return size;
+    
+}
+
 int main(){
    
-    vector<int> nums = {5,2,3,4,5,4};
+    vector<int> nums = {1,1,1,2,2,3};
     
-    cout << findPeakElement(nums)<< endl;
+    cout << removeDuplicates(nums)<< endl;
+        cout << "6666 " << endl;
 
 
 
