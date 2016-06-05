@@ -5,6 +5,7 @@
 #include <math.h>
 #include <unordered_map>
 #include <unordered_set>
+#include <map>
 #include <stack>
 #include <queue>
 #include <set>
@@ -12,6 +13,7 @@
 #include <cmath>
 #include <sstream>
 #include <climits>
+
 
 
 using namespace std;
@@ -900,15 +902,311 @@ int removeDuplicates(vector<int>& nums) {
     
 }
 
-int main(){
-   
-    vector<int> nums = {1,1,1,2,2,3};
+//priority_queue 的 练习 + make_pair, pair
+vector<int> topKFrequent(vector<int>& nums, int k) {
     
-    cout << removeDuplicates(nums)<< endl;
-        cout << "6666 " << endl;
+    map<int, int> m;
+    for(unsigned long i = 0; i < nums.size(); i++){
+        if(m.find(nums[i]) == m.end()){
+            m[nums[i]] = 1;
+        }else{
+            m[nums[i]]++;
+        }
+    }
+
+    priority_queue< pair<int, int> > pq;
+    vector<int> tmp;
+
+    for(auto itr = m.begin(); itr != m.end(); itr ++ ){
+      //  cout << "itr->first: " << itr->first << " " << itr -> second << endl; 
+        pq.push(make_pair(itr->second, itr->first));
+    }
+
+    for(int i = 0; i < k; i++){
+        tmp.push_back(pq.top().second);
+       // cout << pq.top().second << endl;
+        pq.pop();
+    }
+    return tmp;
+}
 
 
 
+//这个方法trick了leetcode， 其实应该用一个set 来储存所有出现过的sum,如果已经出现在了set里面，说明这个重复，然后就不会出现1，就return false;
+bool isHappy(int n) {
+
+    int tmp = n;
+    int result = 0;
+    while(tmp){
+
+        result = (tmp%10)*(tmp%10) + result;
+        tmp = tmp/10;
+    }   
+    result = result + tmp*tmp;
+    tmp = result;
+
+    int count = 50;
+    while(result != 1){
+        result = 0;
+        while(tmp){
+
+         result = (tmp%10)*(tmp%10) + result;
+         tmp = tmp/10;
+        }   
+        result = result + tmp*tmp;
+        tmp =result;
+
+        count --;
+        if(count == 0){
+            return false;
+        }
+    }
+
+
+    if(result == 1 )return true;
+    else return false;
+}
+
+ListNode* swapPairs(ListNode* head) {
+    if(head == NULL) return head;
+
+    ListNode * first = head;
+    if(first -> next == NULL) return head;
+    ListNode * second = first -> next;
+    
+    bool exist = false;     
+    do{
+        exist = false;     
+        int tmp = first -> val;
+        
+
+        first->val = second -> val;
+        second -> val = tmp;
+        cout << "first -> val: " << first -> val << endl;
+        cout << "second -> val: " << second -> val << endl;
+        if(second -> next != NULL && second-> next -> next != NULL){
+            first = second -> next;
+            second = second -> next -> next;
+            exist = true;
+        }
+    }while(exist);
+
+    return head;
+}
+
+
+string reverseVowels(string s) {
+    unsigned long j = s.length() - 1;
+    for(unsigned long i = 0 ; i< s.length(); i++){
+        while((s[i] != 'a' && s[i] != 'e' && s[i] != 'i' && s[i] != 'o' && s[i] != 'u' &&
+            s[i] != 'A' && s[i] != 'E' && s[i] != 'I' && s[i] != 'O' && s[i] != 'U') && i < s.length()){
+            i++;
+        }
+        while((s[j] != 'a' && s[j] != 'e' && s[j] != 'i' && s[j] != 'o' && s[j] != 'u' &&
+            s[j] != 'A' && s[j] != 'E' && s[j] != 'I' && s[j] != 'O' && s[j] != 'U') && j > 0){
+            j--;
+        }
+
+        cout << "i: " << i << endl;
+        cout << "j: " << j << endl;  
+        if(j > i){
+            char tmp = s[i];
+            s[i] = s[j];
+            s[j] = tmp;
+        }else{
+            break;
+        }
+        j--;
+    }
+    cout << s << endl;
+    return s;
+}
+
+int hIndex(vector<int>& citations) {
+
+    sort(citations.begin(), citations.end());
+    unsigned long n = citations.size();
+    int h;
+    for(h = n; h > 0; h--){
+        if(citations[n-h] >= h){
+            break;
+        }else{
+            continue;
+        }
+    }
+    return h; 
+}
+
+
+int hIndex2(vector<int>& citations) {
+
+    int n = citations.size();
+    if(n==0) return 0;
+    int beginning = 0;
+    int ending = n -1 ;
+    int h;
+
+    while(ending >= beginning){
+        h = (ending + beginning )/2;
+        cout << "h: " << h << endl;
+        if(citations[h] >= n-h){
+            ending = h -1 ;            
+        }else{
+            beginning = h + 1;
+        }
+    }
+
+    return n-beginning; 
+}
+
+int search(vector<int>& nums, int target) {
+    
+    for(unsigned long i = 0; i < nums.size(); i++){
+        if(nums[i] == target){
+            return i;
+        }
+    }
+    return -1;
+
+}
+
+int search2(vector<int>& nums, int target) {
+    
+    int low = 0;
+    int high = nums.size()-1;
+    int mid = 0;
+
+    while(low < high ){
+        mid = (low + high)/2;
+        if(nums[mid]== target) return mid;
+        if(nums[mid] > nums[high]){
+            if(nums[mid] > target && nums[low] <= target){
+                high = mid;
+            }else low = mid + 1;
+        }
+        else if(nums[mid] < nums[high]){
+            if(nums[mid] < target && nums[high] >= target){
+                low = mid + 1;
+            }else{
+                high = mid;
+            }
+        }
+        else high --;
+    }
+    return nums[low] == target ? low : -1;
+
+}
+
+vector<vector<int>> subsets(vector<int>& nums){
+    sort(nums.begin(), nums.end());
+    vector<vector<int>> subs(1, vector<int>());
+
+    for(unsigned long i = 0; i < nums.size(); i++){
+        int n = subs.size();
+        for(int j = 0; j < n; j++){
+            subs.push_back(subs[j]);
+            subs.back().push_back(nums[i]);
+        }
+
+    }
+    return subs;
+}
+
+bool hasCycle(ListNode *head) {
+    if(head == NULL) return false;
+    unordered_set<ListNode*> s;
+    s.insert(head);
+    while(head){
+        head = head -> next;
+        if(s.find(head) == s.end()){
+            s.insert(head);
+        }else{
+            return true;
+        }
+    }    
+
+    return false;
+}
+
+ListNode *detectCycle(ListNode *head) {
+    
+    bool detect = false;
+    detect = hasCycle(head);
+
+    if(detect == true){
+        unordered_set<ListNode*> s;
+        s.insert(head);
+        while(head){
+            head = head -> next;
+            if(s.find(head) == s.end()){
+                s.insert(head);
+            }else{
+                return head;
+            }
+        }
+        return NULL;    
+
+    }else{
+        return NULL;
+    }
+}
+
+
+TreeNode *pre = NULL;
+void flatten(TreeNode* root) {
+    if(root == NULL) return; 
+    flatten(root->left);
+    flatten(root->right);
+    root->right = pre;
+    root->left =NULL;
+    pre =root;
+}
+
+ListNode* rotateRight(ListNode* head, int k) {
+    if(head == NULL) return NULL;
+    int size =0;
+    ListNode * tmp = head;
+    while(tmp){
+        size++;
+        tmp = tmp -> next;
+    }
+    int k2 = k%size; 
+    if(k2 == 0) return head;
+    else{
+        int j = size - k2;
+        vector<int> v1;
+        vector<int> v2;
+        ListNode * tmp2 = head;
+        while(j != 0){
+            v1.push_back(tmp2->val);
+            tmp2 = tmp2->next;
+            j--;
+        }
+
+        while(k2 != 0){
+            v2.push_back(tmp2->val);
+            tmp2 = tmp2->next;
+            k2 --;
+        }
+
+        for(int x : v1){
+            v2.push_back(x);
+        }
+
+        ListNode *tmp3 = head;
+        int i = 0;
+        while(tmp3){
+            tmp3->val = v2[i];
+            i++;
+            tmp3=tmp3->next;
+        }
+    }
+    return head;
+
+}
+int main(){
+    
+ 
     return 0;
 }
 
