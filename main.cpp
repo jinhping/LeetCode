@@ -1204,9 +1204,92 @@ ListNode* rotateRight(ListNode* head, int k) {
     return head;
 
 }
-int main(){
+
+void combinationSum_helper(vector<vector<int>> & result, vector<int> &combine, vector<int> &candidates, int target, int begin ) {
+    if(target == 0){
+        result.push_back(combine);
+        return;
+    }
+
+    for(unsigned long i = begin; i < candidates.size() && target >= candidates[i]; i++){
+        combine.push_back(candidates[i]);
+        combinationSum_helper(result, combine, candidates, target - candidates[i],i);
+        combine.pop_back();
+    }
+}
+
+//backtracking 的题目， 使用backtracking 模板
+vector<vector<int>> combinationSum(vector<int>& candidates, int target) {
+    sort(candidates.begin(), candidates.end());
+    vector<vector<int>> result;
+    vector<int> combine; 
+    combinationSum_helper(result, combine, candidates, target, 0);
+    return result;
+
+}
+
+
+// 这个有更简单的方法 就是 创建2个ListNode, 一个 小于3， 一个 不小于， 一遍pass 原来的 ListNode, 最后 小于3的那个 next 指向 不小于3的head.
+ListNode* partition(ListNode* head, int x) {
+           if(head == NULL) return head;
+    ListNode *cur = head;
+    ListNode * new_head = NULL;
+    while(cur){
+       if(cur->val < x){
+         new_head = new ListNode(cur->val);
+         break;
+       }else{
+         cur = cur -> next;
+       }
+    }
+
+    if(!cur){
+        cout << "111" << endl;
+    }
+    ListNode * second = new_head;
+
+    if(cur != NULL){
+        while(cur->next){
+            cur = cur->next;
+            if(cur ->val < x){
+                second -> next = new ListNode(cur -> val);
+                second = second -> next;
+            }else{
+                continue;
+        }
+    }
+
+    }
+
     
- 
+
+    cout << "222" << endl;
+
+    if(second != NULL){
+while(head){
+        if(head -> val >= x){
+            second -> next = new ListNode(head-> val);
+            second = second -> next; 
+            head = head-> next;
+        }else{
+            head = head -> next;
+        }
+    }
+    }
+
+    cout << "333" << endl;
+
+    if(new_head != NULL){
+        return new_head;
+    }else return head;
+    }
+
+
+
+
+int main(){
+
+    
     return 0;
 }
 
