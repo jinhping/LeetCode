@@ -1285,8 +1285,128 @@ while(head){
     }
 
 
+void postorder(vector<int> &res, TreeNode *root){
+    if(root == NULL){
+        return;
+    }
+
+    postorder(res,root -> left);
+    postorder(res,root->right);
+    res.push_back(root -> val);
+
+}
+
+vector<int> postorderTraversal(TreeNode* root) {
+    vector<int> res;
+    postorder(res,root);
+    return res;        
+}
 
 
+//判断是否是 palindrome; 
+// aba  aaabbb aaacbbb  abcc  aabb 
+//初步判读 数每个char 的个数， 长度是偶数的 就每字母的都是 偶数   长度是odd， 就1个字母不是偶数
+bool canPermutePalindrome(string s) {
+
+    int length = s.length();
+    if(length % 2 == 0){
+        unordered_map<char, int> m;
+        for(int i = 0; i < length; i++){
+            if(m.find(s[i]) != m.end()){
+                m[s[i]] ++;
+            }else 
+            {
+                m[s[i]] = 1;
+            }
+        }
+
+        for(int i = 0; i < length; i++){
+            if(m[s[i]]%2 != 0){
+                return false;
+            }
+        }
+        return true;
+    }
+    else
+    {
+        unordered_map<char,int> m;
+        for(int i = 0; i < length; i++){
+            if(m.find(s[i]) != m.end()){
+                m[s[i]] ++;
+            }else 
+            {
+                m[s[i]] = 1;
+            }
+        }
+
+        int count = 0;
+        for(auto itr = m.begin(); itr != m.end(); itr++)
+        {
+            if(itr ->second %2 != 0){
+                count ++;
+            }
+        }
+        
+
+        if(count == 1){
+            return true;
+        }else return false;
+    } 
+
+
+}
+
+
+int shortestDistance(vector<string>& words, string word1, string word2) {
+
+    int dis1 = -1;
+    int dis2 = -1;
+    int diff = 0;
+    int min = -1;
+    for(unsigned long i = 0; i < words.size();i++){
+
+        if(words[i] == word1){
+            dis1 = i;
+        }
+        if(words[i] == word2){
+            dis2 = i;
+        }
+        if(dis1 != -1 && dis2 != -1){
+            diff = abs(dis1 - dis2);
+            if(min == -1){
+                min = diff;
+            }
+        }
+        if(diff < min){
+            min = diff;
+        }
+    }
+    return min;
+}
+
+struct Interval{
+      int start;
+      int end;
+      Interval() : start(0), end(0) {}
+      Interval(int s, int e) : start(s), end(e) {}
+};
+
+struct myclass{
+    bool operator()(Interval a, Interval b){
+        return a.start < b.start;
+    }
+}myobject;
+
+bool canAttendMeetings(vector<Interval>& intervals) {
+        
+    sort(intervals.begin(), intervals.end(), myobject);
+    for(unsigned long i = 1; i < intervals.size(); i++){
+        if(intervals[i].start < intervals[i-1].end){
+            return false;
+        }   
+    }
+    return true;
+}
 int main(){
 
     
