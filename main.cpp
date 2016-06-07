@@ -1424,15 +1424,74 @@ vector<string> generatePossibleNextMoves(string s) {
     return result;
 }
 
+//"66811 11899"  
+// 66811 8 or 1 11899
+bool isStrobogrammatic(string num) {
 
+    if(num.length()%2 == 0){
+        string a = num.substr(0,num.length()/2);
+        string b = num.substr(num.length()/2, num.length()/2);
+        cout << a << endl;
+        cout << b << endl; 
+
+        for(unsigned long i = 0,j = b.length() -1; i < a.length(); i++, j--){
+            if(a[i] == '6' && b[j] != '9'){
+                return false;
+            }else if(a[i] == '9' && b[j] != '6'){
+                return false;
+            }else if(a[i] == '8' && b[j] != '8'){
+                return false;
+            }else if(a[i] == '1' && b[j] != '1'){
+                return false;
+            }else if(a[i] == '0' && b[j] != '0'){
+                return false;
+            }else if(a[i] == '2' || a[i] == '3' ||a[i] == '4' ||a[i] == '5' ||a[i] == '7' ){
+                return false;
+            }else if(b[j] == '2' || b[j] == '3' ||b[j] == '4' ||b[j] == '5' ||b[j] == '7' ){
+                return false;
+            }
+        }   
+        cout << "dui" << endl;
+        return true;
+    }else{
+        string a = num.substr(0,num.length()/2);
+        string b = num.substr(num.length()/2+1, num.length()/2);
+        cout << a << endl;
+        cout << b << endl; 
+        cout << num[num.length()/2] << endl;
+        if(num[num.length()/2]!='1' && num[num.length()/2]!='0'&& num[num.length()/2]!='8' ){
+            return false;
+        }
+
+        cout << "111" << endl;
+
+        for(unsigned long i = 0,j = b.length() -1; i < a.length(); i++, j--){
+            if(a[i] == '6' && b[j] != '9'){
+                return false;
+            }else if(a[i] == '9' && b[j] != '6'){
+                return false;
+            }else if(a[i] == '8' && b[j] != '8'){
+                return false;
+            }else if(a[i] == '1' && b[j] != '1'){
+                return false;
+            }else if(a[i] == '0' && b[j] != '0'){
+                return false;
+            }else if(a[i] == '2' || a[i] == '3' ||a[i] == '4' ||a[i] == '5' ||a[i] == '7' ){
+                return false;
+            }else if(b[j] == '2' || b[j] == '3' ||b[j] == '4' ||b[j] == '5' ||b[j] == '7' ){
+                return false;
+            }
+        }   
+        cout << "dui" << endl;
+        return true;
+    }
+}
 
 
 
 int main(){
 
-    vector<int> nums = {1,2,3,5};
-    int k = 5;
-    cout << maxSubArrayLen(nums,k) << endl;
+    isStrobogrammatic("66399");
     return 0;
 }
 
