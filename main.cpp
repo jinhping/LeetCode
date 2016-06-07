@@ -1397,6 +1397,7 @@ struct myclass{
     }
 }myobject;
 
+
 bool canAttendMeetings(vector<Interval>& intervals) {
         
     sort(intervals.begin(), intervals.end(), myobject);
@@ -1407,9 +1408,31 @@ bool canAttendMeetings(vector<Interval>& intervals) {
     }
     return true;
 }
+
+vector<string> generatePossibleNextMoves(string s) {
+        vector<string> result = {};
+        if(s.length() == 0 ){
+            return result;
+        }    for(unsigned long i = 0; i < s.length() -1 ; i++){
+        if(s[i] == '+' && s[i+1] == '+') {
+            string tmp = s;
+            tmp[i] = '-';
+            tmp[i+1] = '-';
+            result.push_back(tmp);
+        }
+    } 
+    return result;
+}
+
+
+
+
+
 int main(){
 
-    
+    vector<int> nums = {1,2,3,5};
+    int k = 5;
+    cout << maxSubArrayLen(nums,k) << endl;
     return 0;
 }
 
