@@ -1488,10 +1488,32 @@ bool isStrobogrammatic(string num) {
 }
 
 
+int maxSubArrayLen(vector<int>& nums, int k) {
+    unordered_map<int, int> m;
+    m[0] = -1;
+    int sum = 0;
+    int maxLen = 0;
+    for(unsigned long i = 0; i < nums.size(); i++){
+        sum = sum + nums[i];
+        if(m.count(sum) == 0){
+            m[sum] = i;
+        }
+        if(m.count(sum - k)){
+            maxLen = max(maxLen, int(i - m[sum-k]));
+        }
+    }
+
+    return maxLen;
+
+}
+
+
+
 
 int main(){
-
-    isStrobogrammatic("66399");
+    vector<int> v ={-2,-1,2,1};
+    int k = 1;
+    maxSubArrayLen(v,k);
     return 0;
 }
 
