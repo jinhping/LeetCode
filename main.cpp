@@ -1509,11 +1509,154 @@ int maxSubArrayLen(vector<int>& nums, int k) {
 
 
 
+void preorderBST(TreeNode *root, vector<int> &nums){
+    if(root == NULL) return;
+    nums.push_back(root -> val);
+    preorderBST(root -> left, nums);
+    preorderBST(root -> right, nums);
 
+}
+
+int binary_search_min(vector<int> &nums, double target, double &diff, int &low, int &high, int &min, double min_diff){
+    int mid = (high + low) / 2;
+    diff = nums[mid] - target;
+    cout << "low: " << low << endl;
+    cout << "high: " << high << endl;
+    cout << "mid: " << mid << endl;
+    cout << "diff: " << diff << endl;
+    cout << "min_diff: " << min_diff << endl;
+    if(diff == 0.0){
+        cout << "nums[mid] " << nums[mid] << endl;
+        min = nums[mid];
+        return min;
+    }else if(diff > 0){
+        cout << "1111" << endl;
+        high = mid - 1;
+        if(abs(diff) <= min_diff){
+            cout << "4444" << endl;
+            min_diff = abs(diff);
+            min = nums[mid];
+            
+        }
+        if(high >= low){
+                  binary_search_min(nums,target,diff,low, high, min,min_diff);
+  
+        }
+    }else if(diff < 0){
+        cout << "333333" << endl;
+        low = mid + 1;
+        if(abs(diff) <= min_diff){
+            cout << "2222" << endl;
+            min_diff = abs(diff);
+            min = nums[mid];
+            cout << "min: " << min << endl;
+        }
+ if(high >= low){
+                  binary_search_min(nums,target,diff,low, high, min,min_diff);
+  
+        }    }
+    return min;
+
+}
+int closestValue(TreeNode* root, double target){
+    vector<int> nums;
+    preorderBST(root, nums);
+    sort(nums.begin(), nums.end());
+    
+    for(int i : nums){
+        cout << i << endl;
+    }
+    
+    int low = 0;
+    int high = nums.size() -1;
+    int min = 0;
+    double diff = 0.0;
+    return binary_search_min(nums, target, diff, low, high, min, 1.79769e+308);
+}
+
+
+
+vector<vector<int>> levelOrderBottom(TreeNode* root) {
+
+    queue<TreeNode*> q;
+    vector<vector<int>> result;
+    
+    stack<vector<int>> s;
+
+    if(root == NULL) return result;
+    
+    q.push(root);
+    while(!q.empty()){
+        vector<int> tmp;
+        int size = q.size();
+        cout << "size: " << size << endl;
+
+        while(size != 0){
+            if(q.front()-> left != NULL){
+                q.push(q.front()->left);
+
+            }
+            
+            if(q.front() -> right != NULL){
+                 q.push(q.front()->right);
+
+            }
+
+        
+            tmp.push_back(q.front() -> val);
+            q.pop();
+            size --;
+        }
+
+        s.push(tmp);
+    }
+
+    while(!s.empty()){
+        result.push_back(s.top());
+        s.pop();
+    }
+    return result;
+}
+
+
+
+
+vector<int> getRow(int rowIndex) {
+    if(rowIndex == 0){
+        vector<int> result = {1};
+        return result;
+    }
+    if(rowIndex == 1){
+        vector<int> result = {1,1};
+        return result;
+    }
+    if(rowIndex == 2){
+        vector<int> result = {1,2,1};
+        return result;
+    }
+    int k = rowIndex;
+    vector<int> tmp = {1,2,1};
+    vector<int> result;
+    while(k != 2){
+        vector<int> next;
+        next.push_back(1);
+        for(unsigned long i = 0; i < tmp.size()-1;i++){
+            next.push_back(tmp[i] + tmp[i+1]);
+        }
+        next.push_back(1);
+        k--;
+        tmp = next;
+        result = next;
+    }
+    return result;
+}
 int main(){
-    vector<int> v ={-2,-1,2,1};
-    int k = 1;
-    maxSubArrayLen(v,k);
+    
+    vector<int> result = getRow(4);
+    for(unsigned long i = 0; i < result.size(); i++){
+        cout << result[i] << " ";
+    }
+    cout << endl;
     return 0;
 }
 
