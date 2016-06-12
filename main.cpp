@@ -1906,17 +1906,112 @@ int minDepth(TreeNode* root) {
 
         }
     
-
-
     return min;
+}
+
+void binaryTreePaths_helper(TreeNode *root, vector<string> &result, string tmp){
+    if(root -> left == NULL && root -> right == NULL){
+        result.push_back(tmp);
+        return;
+    }
+    if(root -> left){
+        binaryTreePaths_helper(root -> left, result, tmp + "->" + to_string(root->left->val));
+    }
+    if(root -> right){
+        binaryTreePaths_helper(root -> right, result, tmp + "->" + to_string(root->right->val));
+    }
+}
+
+vector<string> binaryTreePaths(TreeNode* root) {
+    vector<string> result;
+    if(root == NULL){
+        result.push_back("");
+        return result;
+    }
+    string tmp = to_string(root->val);
+    binaryTreePaths_helper(root, result, tmp);
+    return result;
 
 }
 
+string addBinary(string a, string b) {
+           string c = reverseString(a);
+    string d = reverseString(b);
+    while(c.length() > d.length()){
+        d += '0';
+    }
 
+    while(c.length() < d.length()){
+        c += '0';
+    }
+    cout << c << endl;
+    cout << d << endl;
 
+    string t = "";
+    bool borrow = false;
+    for(unsigned long i = 0; i < c.length()-1; i++){
+        if(c[i] == '0' && d[i] == '1' && borrow == false){
+            t += '1';
+        }
+        else if(c[i] == '1' && d[i] == '0' && borrow == false){
+            t += '1';
+        }
+        else if(c[i] == '0' && d[i] == '1' && borrow == true){
+            t += '0';
+            borrow = true;
+        }else if(c[i] == '1' && d[i] == '0' && borrow == true){
+            t += '0';
+            borrow = true;
+        }else if(c[i] == '0' && d[i] == '0' && borrow == false){
+            t += '0';
+        }else if(c[i] == '0' && d[i] == '0' && borrow == true){
+            t += '1';
+            borrow = false;
+        }else if(c[i] == '1' && d[i] == '1' && borrow == true){
+            t += '1';
+        }else if(c[i] == '1' && d[i] == '1' && borrow == false){
+            t += '0';
+            borrow = true;
+        }
+    }
+   
+   cout << "t: " << t << endl;
+   cout << "borrow: " << borrow << endl;
+   cout << "c.back(): " << c.back() << endl;
+   cout << "d.back(): " << d.back() << endl;
+        if(c.back() == '0' && d.back() == '1' && borrow == false){
+            t += '1';
+        }
+        else if(c.back() == '1' && d.back() == '0' && borrow == false){
+            t += '1';
+        }
+        else if(c.back() == '0' && d.back() == '1' && borrow == true){
+            t += "01";
+            cout << "222" << endl;
+            
+        }else if(c.back() == '1' && d.back() == '0' && borrow == true){
+            t += "01";
+                        cout << "222" << endl;
+
+        }else if(c.back() == '0' && d.back() == '0' && borrow == false){
+            t += '0';
+        }else if(c.back() == '0' && d.back() == '0' && borrow == true){
+            t += '1';
+        }else if(c.back() == '1' && d.back() == '1' && borrow == true){
+            t += "11";
+        }else if(c.back() == '1' && d.back() == '1' && borrow == false){
+            t += "01";
+            borrow = true;
+        }
+   
+
+    return reverseString(t);
+}
 
 int main(){
-    
+    string a = "111";
+    string b = "1";
+    cout << addBinary(a,b) << endl;
    
     return 0;
 }
