@@ -1650,13 +1650,47 @@ vector<int> getRow(int rowIndex) {
     }
     return result;
 }
+
+
+vector<vector<string>> groupStrings(vector<string>& strings) {
+
+    vector<vector<string>> result;
+   unordered_map<string, vector<string>> m;
+   for(unsigned long i = 0; i < strings.size(); i++){
+        string s = "";
+        for(auto j : strings[i]){
+            s += to_string(((j - strings[i][0]) + 26) % 26) + " ";  
+        }
+
+        if(m.find(s) == m.end()){
+            vector<string> v; 
+            v.push_back(strings[i]);
+            m[s] = v;
+
+
+        }else{
+            m[s].push_back(strings[i]);
+        }
+
+   }
+
+   for(auto i = m.begin(); i != m.end(); i++){
+        sort(i->second.begin(), i->second.end());
+        result.push_back(i->second);
+   }
+   return result;
+}
 int main(){
     
-    vector<int> result = getRow(4);
-    for(unsigned long i = 0; i < result.size(); i++){
-        cout << result[i] << " ";
-    }
-    cout << endl;
+    string a = "abc";
+    string b = "bcd";
+
+    cout << a[0] - b[0] << endl;
+        cout << a[1] - b[2] << endl;
+
+    cout << a[2] - b[2] << endl;
+
+
     return 0;
 }
 
