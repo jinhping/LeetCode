@@ -1876,6 +1876,45 @@ bool isValidSudoku(vector<vector<char>>& board) {
     return result;
 
 }
+
+int minDepth(TreeNode* root) {
+    if(root == NULL){
+        return 0;
+    }
+   
+    queue<TreeNode*> q;
+    q.push(root);
+    int min = 1;
+    while(!q.empty()){
+        int size = q.size();
+        
+            while(size != 0){
+                
+                if(q.front()->left == NULL && q.front()->right == NULL){
+                    return min;
+                }
+                if(q.front()->left !=NULL){
+                    q.push(q.front()->left);
+                }
+                if(q.front() -> right != NULL){
+                    q.push(q.front()->right);
+                }
+                q.pop();
+                size --;
+            }
+            min = min + 1;
+
+        }
+    
+
+
+    return min;
+
+}
+
+
+
+
 int main(){
     
    
