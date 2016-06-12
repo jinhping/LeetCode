@@ -2008,10 +2008,74 @@ string addBinary(string a, string b) {
     return reverseString(t);
 }
 
+int countPrimes(int n) {
+    vector<bool> v(n, true);
+    v[0] = false;
+    v[1] = false;
+    for(unsigned long i = 2; i < sqrt(n); i++){
+        if(v[i]){
+ for(int j = i * i; j < n; j += i ){
+            v[j] = false;
+        }
+        }
+       
+    }
+
+    return count(v.begin(), v.end(),true);
+}
+
+
+
+int reverse(int x) {
+    cout << INT_MAX << endl;
+         string s = to_string(x);
+    cout << s << endl;
+    bool hasNegative = false;
+    if(s[0] == '-'){
+        hasNegative = true;
+    }
+
+    if(hasNegative){
+        int a = abs(x);
+        s = to_string(a);
+        string t = ""; 
+        for(unsigned long i = s.length() -1; i != 0 ; i --){
+            t += s[i];
+        }
+        t += s[0];
+        string b = '-' + t;
+        cout << b << endl;
+        long long c = stoll(b);
+        if(c < INT_MIN){
+            return 0;
+        }
+        return stoi(b);
+    }else{
+        
+        string t = ""; 
+        for(unsigned long i = s.length() -1; i != 0 ; i --){
+            t += s[i];
+        }
+        t += s[0];
+        cout << t << endl;
+        cout << "1111  " << endl;
+        long long c = stoll(t);
+        if(c > INT_MAX){
+            return 0;
+        }
+        cout << "2222" << endl;
+        return stoi(t);
+    }
+}
+
+
+string convertToTitle(int n) {
+    
+    return "";    
+}
+
 int main(){
-    string a = "111";
-    string b = "1";
-    cout << addBinary(a,b) << endl;
+    reverse(-521);
    
     return 0;
 }
