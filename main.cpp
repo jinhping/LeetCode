@@ -1680,17 +1680,32 @@ vector<vector<string>> groupStrings(vector<string>& strings) {
    }
    return result;
 }
+
+int numWays(int n, int k) {
+    if(n == 0){
+        return 0;
+    }else if(n == 1 ){
+        return k;
+    }
+    else if(n == 2){
+        return k * k;
+    }
+    vector<int> v;
+    v.resize(n+1);
+
+    v[0] = 0;
+    v[1] = k;
+    v[2] = k*k;
+    for(int i = 3; i <= n; i++ ){
+        v[i] = (k-1)*v[i-1] + (k-1)*v[i-2];
+    }
+    return v[n];
+
+
+}
 int main(){
     
-    string a = "abc";
-    string b = "bcd";
-
-    cout << a[0] - b[0] << endl;
-        cout << a[1] - b[2] << endl;
-
-    cout << a[2] - b[2] << endl;
-
-
+   
     return 0;
 }
 
