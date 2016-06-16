@@ -2068,15 +2068,117 @@ int reverse(int x) {
     }
 }
 
+//Lintcode substr 
+int strStr(const char *source, const char *target) {
 
-string convertToTitle(int n) {
-    
-    return "";    
+        // write your code here
+        string a = source;
+        string c = target;
+        if(*target =='\0' ) return 0;
+        if(*source == '\0' && *target == '\0') return 0;
+        if((*source == '\0'|| source == NULL) && *target != '\0') return -1;
+
+        bool check = false;
+        const char * b =  target;
+        bool first = true;
+        int index = 0; 
+        int count = 0;
+        while(*source != '\0'){
+
+            if(*source == *target){
+
+                if(first == true){
+                    index = count;
+                    first = false;
+                }
+
+                target ++;
+                check = true;
+            }else{
+                if(check == true){
+                    check = false;
+                    target = b;
+                    first = true;
+                }
+            }
+
+            if(*target == '\0'){
+                return index;
+            }
+            source ++;
+            count ++ ;
+        }    
+        
+        return -1;
 }
 
+
+
+
+class ValidWordAbbr {
+public:
+    ValidWordAbbr(vector<string> &dictionary) {
+        vector<string> abbr;
+        for(unsigned long i = 0; i < dictionary.size(); i++ ){
+            if(dictionary[i].length() <= 2){
+                abbr.push_back(dictionary[i]);
+            }
+            else{
+                int middle = dictionary[i].length() - 2;
+                string tmp = dictionary[i][0] + to_string(middle) + dictionary[i].back();
+                abbr.push_back(tmp);
+            }
+        }
+
+        for(unsigned long i = 0; i < abbr.size(); i++){
+            if(m.find(abbr[i]) == m.end()){
+                m[abbr[i]] = dictionary[i];
+            }else{
+                if(m[abbr[i]] != dictionary[i]){
+                    s.insert(abbr[i]);
+                }
+            }
+        }     
+    }
+
+    bool isUnique(string word) {
+        string new_word = "";
+        if(word.length() <= 2){
+            new_word = word;
+        }else{
+            new_word = word[0] + to_string(word.length() -2) + word.back();
+        }
+        cout << "new_word: " << new_word << endl;
+
+
+        if(s.find(new_word) != s.end()){
+            return false;
+        }
+        
+        if(m.find(new_word) == m.end()){
+            return true;
+        }else{
+            if(m[new_word] == word){
+                return true;
+            }else{
+                return false;
+            }
+        }        
+    }
+private: 
+    unordered_map<string,string> m;
+    set<string> s;
+};
+
+
+
 int main(){
-    reverse(-521);
-   
+    vector<string> dictionary = {"dog"};
+    ValidWordAbbr val(dictionary);
+    cout << "dig: " << val.isUnique("dig") << endl;
+    cout << "dog: "<< val.isUnique("dog") << endl;
+    cout << "doge: " << val.isUnique("doge") << endl;
+
     return 0;
 }
 
