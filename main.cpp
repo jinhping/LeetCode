@@ -2207,13 +2207,68 @@ vector<int> twoSum(vector<int>& numbers, int target) {
     return t;
 }
 
-int main(){
-    vector<int> nums = {2,7,11,15};
-    int target = 9;
-    vector <int> tmp = twoSum(nums,target);
-    for(auto x: tmp){
-        cout << x << " ";
+
+vector<vector<int>> multiply(vector<vector<int>>& A, vector<vector<int>>& B) {
+    int A_row = A.size();
+    int A_col = A[0].size();
+   // int B_row = B.size();
+    int B_col = B[0].size();
+
+    vector<vector<int>> result(A_row, vector<int>(B_col));
+
+    for(int i = 0; i < A_row;i++){
+        
+        for(int j = 0; j < A_col; j++){
+
+            if(A[i][j] == 0){
+                continue;
+            }
+            for(int k = 0; k < B_col; k++){
+                if(B[j][k] == 0){
+                    continue;
+                }
+                result[i][k] += A[i][j] * B[j][k];
+            }
+
+
+        }
+
     }
+
+    return result;
+}
+
+int shortestWordDistance(vector<string>& words, string word1, string word2) {
+    
+    int pos1 = -1;
+    int pos2 = -1;
+    int min = INT_MAX;
+    int diff = 0;
+    int odd = 1;
+    for(unsigned long i = 0; i < words.size(); i++){
+            if(words[i] == word1 && (odd%2 == 1 || word1 != word2)){
+                pos1 = i;
+                odd ++;
+            }
+            else if(words[i] == word2){
+                pos2 = i;
+                odd ++;
+            }
+        
+        
+        if(pos1 != -1 && pos2 != -1){
+            diff = abs(pos2 - pos1);
+            if (diff < min){
+                min = diff;
+            }
+        }
+
+    }
+    return min;       
+}   
+int main(){
+    vector<string> str = {"abc","ccc", "makes","a", "b","makes","makes" };
+    cout << shortestWordDistance(str,"abc","ccc");
     cout << endl;
     return 0;
 }
