@@ -2170,15 +2170,51 @@ private:
     set<string> s;
 };
 
+void wiggleSort(vector<int>& nums) {
+    
+    for(unsigned long i = 1; i< nums.size(); i++){
 
+        if(i%2 == 1 && nums[i] < nums[i-1]){
+            int a = nums[i];
+            nums[i] = nums[i-1];
+            nums[i-1] = a;
+        }else if(i%2 == 0 && nums[i] > nums[i-1]){
+            int a = nums[i];
+            nums[i] = nums[i-1];
+            nums[i-1] = a;
+        }
+    }
+
+}
+
+
+vector<int> twoSum(vector<int>& numbers, int target) {
+    
+    int begin = 0;
+    int end = numbers.size() - 1;
+
+    while(begin < end){
+        if(numbers[begin] + numbers[end] == target){
+            vector<int> result = {begin+1, end+1};
+            return result;
+        }else if(numbers[begin]+numbers[end] < target ){
+            begin ++;
+        }else{
+            end--;
+        }
+    } 
+    vector<int> t;
+    return t;
+}
 
 int main(){
-    vector<string> dictionary = {"dog"};
-    ValidWordAbbr val(dictionary);
-    cout << "dig: " << val.isUnique("dig") << endl;
-    cout << "dog: "<< val.isUnique("dog") << endl;
-    cout << "doge: " << val.isUnique("doge") << endl;
-
+    vector<int> nums = {2,7,11,15};
+    int target = 9;
+    vector <int> tmp = twoSum(nums,target);
+    for(auto x: tmp){
+        cout << x << " ";
+    }
+    cout << endl;
     return 0;
 }
 
