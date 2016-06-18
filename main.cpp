@@ -2265,11 +2265,52 @@ int shortestWordDistance(vector<string>& words, string word1, string word2) {
 
     }
     return min;       
-}   
+} 
+
+
+int minCost(vector<vector<int>>& costs) {
+    if(costs.size() == 0) return 0;
+
+    int red = costs[0][0];
+    int green = costs[0][1];
+    int blue = costs[0][2];
+
+    for(unsigned long i = 1; i < costs.size(); i++){
+        int red_i = costs[i][0] + min(green,blue);
+        int green_i = costs[i][1] + min(red, blue);
+        int blue_i = costs[i][2] + min(red, green);
+
+        red = red_i;
+        green = green_i;
+        blue = blue_i;
+    }
+    return min(blue, min(red,green));
+        
+}
+
+int find_helper(vector<int> &v, int i){
+    if(v[i] == -1){
+        return i;
+    }
+    return find_helper(v,v[i]);
+}
+int countComponents(int n, vector<pair<int, int>>& edges) {
+    vector<int> v(n, -1);
+    for(unsigned long i = 0; i< edges.size();i++){
+        int x = find_helper(v,edges[i].first);
+        int y = find_helper(v,edges[i].second);
+        if(x != y){
+            v[x] = y;
+            n--;
+        }
+    }
+    return n;
+}
 int main(){
-    vector<string> str = {"abc","ccc", "makes","a", "b","makes","makes" };
-    cout << shortestWordDistance(str,"abc","ccc");
-    cout << endl;
+    
+   
+
+
     return 0;
 }
 
