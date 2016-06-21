@@ -2068,49 +2068,6 @@ int reverse(int x) {
     }
 }
 
-//Lintcode substr 
-int strStr(const char *source, const char *target) {
-
-        // write your code here
-        string a = source;
-        string c = target;
-        if(*target =='\0' ) return 0;
-        if(*source == '\0' && *target == '\0') return 0;
-        if((*source == '\0'|| source == NULL) && *target != '\0') return -1;
-
-        bool check = false;
-        const char * b =  target;
-        bool first = true;
-        int index = 0; 
-        int count = 0;
-        while(*source != '\0'){
-
-            if(*source == *target){
-
-                if(first == true){
-                    index = count;
-                    first = false;
-                }
-
-                target ++;
-                check = true;
-            }else{
-                if(check == true){
-                    check = false;
-                    target = b;
-                    first = true;
-                }
-            }
-
-            if(*target == '\0'){
-                return index;
-            }
-            source ++;
-            count ++ ;
-        }    
-        
-        return -1;
-}
 
 
 
@@ -2306,11 +2263,203 @@ int countComponents(int n, vector<pair<int, int>>& edges) {
     }
     return n;
 }
+
+
+int minTotalDistance(vector<vector<int>>& grid) {
+    vector<int> rows;
+    vector<int> cols;
+    if(grid.empty()){
+        return 0;
+    }
+    for(unsigned long i = 0; i < grid.size();i++){
+        for(unsigned long j = 0; j < grid[0].size();j++){
+            if(grid[i][j]){
+                rows.push_back(i);
+                cols.push_back(j);
+            }
+        }
+    }   
+
+    sort(cols.begin(),cols.end());
+    int row_median = rows[rows.size()/2];
+    int col_median = cols[cols.size()/2];
+    int result = 0;
+    for(auto x : rows){
+        result += abs(x - row_median);
+    }
+    for(auto x : cols){
+        result += abs(x - col_median);
+    }
+    return result;
+}
+
+ListNode* addTwoNumbers(ListNode* l1, ListNode* l2) {
+    ListNode * head = NULL;
+    ListNode * prev = NULL;
+    int carry = 0;
+    while(l1 || l2){
+        int a = l1 ? l1 -> val : 0;
+        int b = l2 ? l2 -> val : 0;
+
+        int sum =  a + b + carry;
+        ListNode * cur;
+        if(sum < 10){
+            cur = new ListNode(sum);
+            carry = 0;
+        }else{
+            cur = new ListNode(sum%10);
+            carry = sum/10;
+        }
+
+        if(!head) head = cur;
+        if(prev) prev -> next  = cur;
+        prev = cur;
+
+        l1 = l1 ? l1 -> next : NULL;
+        l2 = l2 ? l2 -> next : NULL;
+    }  
+    if(carry > 0){
+        prev -> next = new ListNode(carry);
+    }
+
+    return head;
+}
+/*
+double findMedianSortedArrays(vector<int>& nums1, vector<int>& nums2) {
+    int i = 0; 
+    int j = nums1.size() -1;
+    int x = 0;
+    int y = nums2.size() -1;
+
+    while(){
+
+    }        
+}
+
+*/
+
+
+int binarySearch_first(vector<int> &array, int target) {
+        // write your code here
+        if (array[0] == target) return 0;
+        int low = 0;
+        int high = array.size() -1;
+        int mid;
+        while (low <= high) {
+            mid = (low + high) / 2;
+            cout << "low: " << low  << endl;
+            cout << "high : " << high << endl;
+                        cout << "mid: " << mid << endl;
+
+            if (array[mid] > target) {
+                high = mid - 1;
+            } else if (array[mid] < target) {
+                low = mid + 1;
+            } else if (array[mid] == target) {
+                if (array[mid - 1] != target) {
+                    return mid;
+                } else {
+                    high = mid - 1;
+                }
+            }
+        }
+        return -1;
+}
+
+int binarySearch_last(vector<int> &A, int target) {
+        // write your code here
+        if (A[A.size()-1] == target) return A.size()-1;
+        int low = 0;
+        int high = A.size() -1;
+        int mid;
+        while (low <= high) {
+            mid = (low + high) / 2;
+            cout << "low: " << low  << endl;
+            cout << "high : " << high << endl;
+            cout << "mid: " << mid << endl;
+            if (A[mid] > target) {
+                high = mid - 1;
+            } else if (A[mid] < target) {
+                low = mid + 1;
+            } else if (A[mid] == target) {
+                if (A[mid + 1] != target) {
+                    return mid;
+                } else {
+                    low = mid + 1;
+                }
+            }
+        }
+        return -1;
+}
+
+int lastPosition(vector<int>& A, int target) {
+        // write your code here
+        if (A[A.size()-1] == target) return A.size()-1;
+        int low = 0;
+        int high = A.size() -1;
+        int mid;
+        while (low <= high) {
+            mid = (low + high) / 2;
+            cout << "low: " << low  << endl;
+            cout << "high : " << high << endl;
+            cout << "mid: " << mid << endl;
+            if (A[mid] > target) {
+                high = mid - 1;
+            } else if (A[mid] < target) {
+                low = mid + 1;
+            } else if (A[mid] == target) {
+                if (A[mid + 1] != target) {
+                    return mid;
+                } else {
+                    low = mid + 1;
+                }
+            }
+        }
+        return -1;
+}
+
+
+int searchInsert(vector<int> &A, int target) {
+    // write your code here
+    int low = 0;
+    int high = A.size() - 1;
+    int mid;
+    while (low <= high) {
+        mid = (low + high) / 2;
+        if (A[mid] == target) {
+            return mid;
+        } else if (A[mid] > target) {
+            high = mid - 1;
+        } else if (A[mid] < target) {
+            low = mid + 1;
+        }
+    }
+    return low;
+}
+
+int findMin(vector<int> &num) {
+        // write your code here
+    int low = 0;
+    int high = num.size() - 1;
+    int mid;
+    while (low < high) {
+        mid = (low + high) / 2;
+        cout << "mid: " << mid << endl;
+        if(num[low] < num[high]) { 
+            return num[low];
+        } else if (num[low] > num[high] && num[mid] > num[low]) {
+            low = mid + 1;
+        } else if (num[low] >  num[high] && num[mid] <= num[low] ) {
+            low++;
+            high = mid;
+        }
+    }
+    return num[low];
+}
+
 int main(){
-    
-   
-
-
+    vector<int> A = {2,1};
+    cout << findMin(A) << endl;
     return 0;
 }
 
