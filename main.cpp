@@ -1059,16 +1059,6 @@ int hIndex2(vector<int>& citations) {
     return n-beginning; 
 }
 
-int search(vector<int>& nums, int target) {
-    
-    for(unsigned long i = 0; i < nums.size(); i++){
-        if(nums[i] == target){
-            return i;
-        }
-    }
-    return -1;
-
-}
 
 int search2(vector<int>& nums, int target) {
     
@@ -2457,9 +2447,64 @@ int findMin(vector<int> &num) {
     return num[low];
 }
 
+ int findPeak(vector<int> A) {
+    int low = 0;
+    int high = A.size() - 1;
+    int mid;
+    while (low <= high) {
+        mid = (low + high) / 2;
+     //   cout << "low: " << low << endl;
+    //    cout << "high: " << high << endl;
+     //   cout << "mid: " << mid << endl;
+        if (A[mid] > A[mid - 1] && A[mid] > A[mid + 1]) {
+            return mid; 
+        } else if (A[mid] < A[mid - 1]) {
+            high = mid - 1;
+        } else if (A[mid] < A[mid + 1]) {
+            low  = mid + 1;
+        }
+    }
+    return -1;    
+}
+
+
+int search(vector<int> &A, int target) {
+    // write your code here
+    int low = 0;
+    int high = A.size() - 1;
+    int mid;
+    while (low <= high) {
+        mid = (low + high) / 2;
+        if (A[mid] == target) {
+            return mid;
+        }
+        if (A[mid] > A[high]) {
+            if (A[mid] > target && A[low] <= target) {
+                high = mid - 1;
+            } else {
+                low = mid + 1;
+            }
+        } else if (A[mid] < A[low]) {
+            if (A[mid] < target && A[high] >= target) {
+                low = mid + 1;
+            } else {
+                high = mid - 1;
+            }
+        } else {
+            if (A[mid] > target) {
+                high = mid - 1;
+            } else {
+                low = mid + 1;
+            }
+        }
+    }
+    return -1;
+}
+
+
 int main(){
-    vector<int> A = {2,1};
-    cout << findMin(A) << endl;
+    vector<int> A = {0,1,2,-10,-9,-8,-7,-6,-5,-4,-3,-2,-1};
+    cout << search(A,-9) << endl;
     return 0;
 }
 
