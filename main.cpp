@@ -2501,10 +2501,34 @@ int search(vector<int> &A, int target) {
     return -1;
 }
 
+vector<int> searchRange(vector<int> &A, int target) {
+   vector<int> result; 
+   vector<int>::iterator it;
+   it = find(A.begin(),A.end(),target);
+   int left;
+   int right;
+   if (it != A.end()) {
+        left = it - A.begin();
+   } else {
+        left = -1;
+   }
+   right = -1;
+   for(int i = A.size() - 1; i >= 0; i--){
+        if(A[i] == target) {
+            right = i;
+            break;
+        }
+   }
+   result = {left, right};
+   return result;
+}
 
 int main(){
-    vector<int> A = {0,1,2,-10,-9,-8,-7,-6,-5,-4,-3,-2,-1};
-    cout << search(A,-9) << endl;
+    vector<int> A = {5,5,5,5,5,5,5,5,5,5};
+    vector<int> tmp = searchRange(A,5);
+    for(auto x: tmp){
+        cout << x << endl;
+    }
     return 0;
 }
 
