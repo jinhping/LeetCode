@@ -2569,6 +2569,21 @@ bool isValidBST(TreeNode *root) {
 }
 
 
+int max_helper(TreeNode *root, int &maxSum) {
+    if (root == NULL) {
+        return 0;
+    }
+    int left = max(0,max_helper(root->left,maxSum));
+    int right = max(0,max_helper(root->right, maxSum));
+    maxSum = max(maxSum, left + right + root->val);
+    return max(left, right) + root->val;
+}
+int maxPathSum(TreeNode* root) {
+     int maxSum = INT_MIN;
+     max_helper(root, maxSum);
+     return maxSum;       
+}
+
 int main(){
     TreeNode* root = new TreeNode(1);
     root->left = new TreeNode(2);
