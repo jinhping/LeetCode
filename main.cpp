@@ -2621,6 +2621,27 @@ TreeNode* inorderSuccessor(TreeNode* root, TreeNode* p) {
     return NULL;
 }
 
+
+ TreeNode *lowestCommonAncestor(TreeNode *root, TreeNode *A, TreeNode *B) {
+    // write your code here
+    if (root == NULL) {
+        return NULL;
+    }
+
+    if (root == A || root == B) {
+        return root;
+    } 
+    TreeNode *left = lowestCommonAncestor(root->left, A, B);
+    TreeNode *right = lowestCommonAncestor(root->right, A, B);
+    if (left == NULL) {
+        return right;
+    } else if (right == NULL) {
+        return left;
+    } else {
+        return root;
+    }
+}
+
 int main(){
     TreeNode* root = new TreeNode(1);
     root->left = new TreeNode(2);
