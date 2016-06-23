@@ -2523,12 +2523,58 @@ vector<int> searchRange(vector<int> &A, int target) {
    return result;
 }
 
-int main(){
-    vector<int> A = {5,5,5,5,5,5,5,5,5,5};
-    vector<int> tmp = searchRange(A,5);
-    for(auto x: tmp){
-        cout << x << endl;
+vector<vector<int>> levelOrder(TreeNode *root) {
+    // write your code here
+    vector<vector<int>> result;
+    queue<TreeNode*> q; 
+    if (root == NULL) {
+        return result;
     }
+    cout << " 1111" << endl;
+    q.push(root);
+    while (!q.empty()) {
+        int size = q.size();
+        vector<int> tmp;
+        cout << "size: " << size << endl;
+
+        while (size != 0) {
+            if (q.front()->left != NULL) {
+                q.push(q.front()->left);
+            }
+            if (q.front()->right!= NULL) {
+                q.push(q.front()->right);
+            }
+            tmp.push_back(q.front()->val);
+            q.pop();
+            size--;
+        }
+        result.push_back(tmp);    
+    }
+    return result;
+}
+
+bool isValidBST_helper(TreeNode *root, long int max, long int min) {
+    if (root == NULL) {
+        return true;
+    }
+    if (root -> val >= max || root -> val <= min) {
+        return false;
+    }
+    return isValidBST_helper(root->left, root->val, min) && isValidBST_helper(root->right, max, root->val);
+}
+
+bool isValidBST(TreeNode *root) {
+    // write your code here
+    return isValidBST_helper(root, LONG_MAX, LONG_MIN);
+}
+
+
+int main(){
+    TreeNode* root = new TreeNode(1);
+    root->left = new TreeNode(2);
+    root->right = new TreeNode(3);
+    vector<vector<int>> result = levelOrder(root);
+
     return 0;
 }
 
