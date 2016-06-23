@@ -2568,7 +2568,7 @@ bool isValidBST(TreeNode *root) {
     return isValidBST_helper(root, LONG_MAX, LONG_MIN);
 }
 
-
+//leetcode
 int max_helper(TreeNode *root, int &maxSum) {
     if (root == NULL) {
         return 0;
@@ -2582,6 +2582,43 @@ int maxPathSum(TreeNode* root) {
      int maxSum = INT_MIN;
      max_helper(root, maxSum);
      return maxSum;       
+}
+
+//lintcode
+int max_helper2(TreeNode *root, int maxSum) {
+    if (root == NULL) {
+        return 0;
+    }
+    int left = max_helper2(root->left,maxSum);
+    int right = max_helper2(root->right, maxSum);
+    maxSum = max(0, max(left, right)) + root->val + maxSum;
+    return maxSum;
+}
+int maxPathSum2(TreeNode *root) {
+        // Write your code here
+    int maxSum = 0;
+    maxSum = max_helper2(root, maxSum);
+    return maxSum;   
+}
+
+void inorderSuccessor_helper(TreeNode *root, vector<TreeNode*> &container) {
+    if (root == NULL) {
+        return;
+    }
+    inorderSuccessor_helper(root->left, container);
+    container.push_back(root);
+    inorderSuccessor_helper(root->right, container);
+}
+
+TreeNode* inorderSuccessor(TreeNode* root, TreeNode* p) {
+    vector<TreeNode*> container;
+    inorderSuccessor_helper(root, container);
+    for (unsigned long i = 0; i < container.size(); i++) {
+        if (container[i] == p && i != container.size() - 1) {
+            return container[i+1];
+        } 
+    }
+    return NULL;
 }
 
 int main(){
