@@ -2642,11 +2642,141 @@ TreeNode* inorderSuccessor(TreeNode* root, TreeNode* p) {
     }
 }
 
+void subsetsWithDup_helper(vector<int> &nums, vector<vector<int>> &result, vector<int> &tmp, unsigned long start) {
+    result.push_back(tmp);
+    for (unsigned long i = start; i < nums.size(); i++) {
+        if (i == start || nums[i] != nums[i-1]) {
+            tmp.push_back(nums[i]);
+            subsetsWithDup_helper(nums, result, tmp, i + 1);
+            tmp.pop_back();
+        }
+    }
+}
+
+vector<vector<int>> subsetsWithDup(vector<int>& nums) {
+    vector<vector<int>> result;
+    vector<int> tmp;
+    sort(nums.begin(), nums.end());
+    subsetsWithDup_helper(nums, result, tmp, 0);
+    return result;           
+}
+
+void permute2_helper(vector<vector<int>> &results, vector<int> nums, unsigned long start) {
+    if (start == nums.size()) {
+        results.push_back(nums);
+        return;
+    }
+    for (unsigned long i = start; i < nums.size(); i++) {
+        swap(nums[i], nums[start]);
+        permute2_helper(results, nums, start + 1);
+        swap(nums[i], nums[start]);
+    }
+}
+
+// 不用next_permutation 做， 用backtracking 做
+vector<vector<int> > permute2(vector<int> nums) {
+    // write your code here
+    vector<vector<int>> results;
+    permute2_helper(results, nums, 0);
+    return results;
+       
+}
+
+//permutation 2  with duplicate values, 我就是在1的基础上 加一个set
+void permute3_helper(vector<vector<int>> &results, vector<int> nums, unsigned long start, set <vector<int>> &s ) {
+    if (start == nums.size()) {
+        if (s.find(nums) == s.end()) {
+            results.push_back(nums);
+            s.insert(nums);
+        }
+        return;
+    }
+    for (unsigned long i = start; i < nums.size(); i++) {
+        swap(nums[i], nums[start]);
+        permute3_helper(results, nums, start + 1,s);
+        swap(nums[i], nums[start]); 
+    }
+}
+
+vector<vector<int> > permute3(vector<int> nums) {
+    // write your code here
+    vector<vector<int>> results;
+    set< vector<int> > s;
+    permute3_helper(results, nums, 0, s);
+    return results;
+       
+}
+
+int high_index_helper(vector<int> &A, int target){
+    int low = 0;
+    int high = A.size() - 1;
+
+    if (A[high] == target) {
+        return high;
+    }
+    high--;
+    int mid;
+    while (low <= high) {
+        mid = (low + high ) / 2;
+        if (A[mid] == target && A[mid + 1] != target) {
+            return mid;
+        } else if (A[mid] > target) {
+            high = mid - 1;
+        } else {
+            low = mid + 1;
+        }
+    }
+    return -1;
+}
+
+int low_index_helper(vector<int> &A, int target) {
+    int low = 0;
+    if (A[low] == target) {
+        return low;
+    }
+    low++;
+    int high = A.size() - 1;
+    int mid; 
+    while (low < high) {
+        mid = (low + high) / 2;
+        cout << "low: " << low << "   high: " << high << endl;
+        cout << "mid: " << mid << endl;
+        if (A[mid] == target && A[mid - 1] != target) {
+            return mid;
+        } else if (A[mid] >= target) {
+            high = mid ;
+        } else {
+            low = mid - 1;
+        }
+    }
+    return -1;   
+}
+int totalOccurrence(vector<int>& A, int target) {
+    if (A.size() == 0) {
+        return 0;
+    }
+    // Write your code here
+    int high_index = -1;
+    int low_index = -1;
+    high_index = high_index_helper(A, target);
+    low_index = low_index_helper(A, target);
+    cout << "high_index: " << high_index << endl;
+    cout << "low_index: " << low_index << endl;
+    if (high_index == low_index && high_index == -1) {
+        return 0;
+    } else if (high_index == low_index) {
+        return 1;
+    } else {
+        return high_index - low_index + 1;
+    }
+}
+
+int closestNumber(vector<int>& A, int target) {
+    // Write your code here
+}
+
 int main(){
-    TreeNode* root = new TreeNode(1);
-    root->left = new TreeNode(2);
-    root->right = new TreeNode(3);
-    vector<vector<int>> result = levelOrder(root);
+    
 
     return 0;
 }
