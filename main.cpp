@@ -2771,13 +2771,151 @@ int totalOccurrence(vector<int>& A, int target) {
     }
 }
 
+
+int closestNumber_helper(vector<int> &A, int target, int min) {
+    int low = 0;
+    int high = A.size() - 1;
+    int mid;
+    int diff;
+    int index;
+    while (low <= high) {
+        mid = (low + high) / 2;
+        if (A[mid] == target) {
+            return mid;
+        } else if (A[mid] < target) {
+            diff = target - A[mid];
+            if (diff < min) {
+                min = diff;
+                index = mid;
+            }
+            low = mid + 1;
+        } else {
+            diff = A[mid] - target;
+            if (diff < min) {
+                min = diff;
+                index = mid;
+            }
+            high = mid - 1;
+        }
+    }
+    return index;
+}
+
 int closestNumber(vector<int>& A, int target) {
     // Write your code here
+    int index = -1;
+    int min = INT_MAX;
+    index = closestNumber_helper(A, target, min);
+    return index;
+}
+
+
+
+vector<int> kClosestNumbers(vector<int>& A, int target, int k) {
+    // Write your code here
+    vector<int> results;
+    if (k == 0) {
+        return results;
+    }
+    int index_cloest = closestNumber(A, target);
+    int size = A.size();
+    cout << "index_cloest: " << index_cloest << endl;
+    if (index_cloest == 0) {
+        k--;
+        results.push_back(A[0]);
+        while (k != 0) {
+            results.push_back(A[++index_cloest]);
+            k--;
+        }
+        return results;
+    } else if (index_cloest == (size - 1)) {
+        k--;
+        results.push_back(A[index_cloest]);
+        while (k != 0) {
+            results.push_back(A[--index_cloest]);
+            k--;
+        }
+        return results;
+    } else {
+        results.push_back(A[index_cloest]);
+        k--;
+        int i_left = 1;
+        int i_right = 1;
+        //cout << "k: " << k << endl;
+       //cout << "index_cloest: " << index_cloest << endl;
+        while (k != 0) {
+            if ((index_cloest - i_left) >= 0 && (index_cloest + i_right) <= ( size - 1)) {
+                cout << "k: " << k << endl;
+                int diff_left = abs(target - A[index_cloest - i_left]);
+                int diff_right = abs(target- A[index_cloest + i_right]);
+                if (diff_left == diff_right) {
+                    results.push_back(A[index_cloest - i_left]);
+                    i_left++;
+                    k--;
+                    if (k != 0 ) {
+                        results.push_back(A[index_cloest + i_right]);
+                        i_right++;
+                        k--;
+                    }
+                } else if (diff_left > diff_right) {
+                    results.push_back(A[index_cloest + i_right]);
+                    i_right++;
+                    k--;
+                    /*
+                    if (k != 0 ) {
+                        results.push_back(A[index_cloest - i_left]);
+                        i_left++;
+                        k--;
+                    }
+                    */
+                } else if (diff_left < diff_right) {
+                    results.push_back(A[index_cloest - i_left]);
+                    i_left++;
+                    k--;
+                    /*
+                    if (k != 0 ) {
+                        results.push_back(A[index_cloest + i_right]);
+                        i_right++;
+                        k--;
+                    }
+                    */
+                }
+            } else if ((index_cloest - i_left) < 0 && (index_cloest + i_right) > (size - 1)) {
+                return results;
+            } else if ((index_cloest - i_left) < 0) {
+                while (k != 0) {
+                    results.push_back(A[index_cloest + i_right]);
+                    i_right++;
+                    k--;
+                    if ((index_cloest + i_right) > (size - 1)) {
+                        return results;
+                    }
+                }
+            } else if ((index_cloest + i_right) > (size - 1)) {
+                   while (k != 0) {
+                    results.push_back(A[index_cloest - i_left]);
+                    i_left++;
+                    k--;
+                    if ((index_cloest - i_left) < 0) {
+                        return results;
+                    }
+                } 
+            }           
+        }
+        return results;
+    }
 }
 
 int main(){
     
-
+    vector<int> nums = {1,2,4,5,6,7,8,10};
+    int target = 5;
+    int k = 0;
+    vector<int> results = kClosestNumbers(nums, target, k);
+    for (unsigned long i = 0; i < results.size(); i++) {
+        cout << results[i] << " "; 
+    }
+    cout << endl;
     return 0;
 }
 
