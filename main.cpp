@@ -2906,15 +2906,60 @@ vector<int> kClosestNumbers(vector<int>& A, int target, int k) {
     }
 }
 
+bool woodCut_helper(vector<int> L, int k, int mid) {
+    int sum = 0;
+    for (auto x : L) {
+        sum += x/mid;
+    }
+    if (sum >= k) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+int woodCut(vector<int> L, int k) {
+    // write your code here
+    if (L.size() == 0 || k == 0) {
+        return 0;
+    }
+    int low = 0;
+    int high = INT_MAX;
+    int mid;
+    while (low + 1 < high) {
+        mid = (low + high) / 2;
+        cout << "mid: " << endl;
+        if (woodCut_helper(L, k, mid)) {
+            low = mid;
+        } else {
+            high = mid;
+        }
+    }
+    return mid;
+}
+
+int findMin2(vector<int> &num) {
+    int low = 0;
+    int high = num.size() - 1;
+    int mid;
+    while (low < high) {
+        mid = low + (high - low) / 2;
+        if (num[mid] < num[high]) {
+            high = mid;
+        } else if (num[mid] > num[high]) {
+            low = mid + 1;
+        } else {
+            high--;
+        }
+    }
+    return num[low];
+}
+
+
 int main(){
     
-    vector<int> nums = {1,2,4,5,6,7,8,10};
-    int target = 5;
-    int k = 0;
-    vector<int> results = kClosestNumbers(nums, target, k);
-    for (unsigned long i = 0; i < results.size(); i++) {
-        cout << results[i] << " "; 
-    }
+    vector<int> nums = {999,999,1000,1000,10000,0,999,999,999};
+    cout << findMin2(nums);
     cout << endl;
     return 0;
 }
