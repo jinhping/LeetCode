@@ -14,8 +14,6 @@
 #include <sstream>
 #include <climits>
 
-
-
 using namespace std;
 
 struct ListNode {
@@ -2955,12 +2953,505 @@ int findMin2(vector<int> &num) {
     return num[low];
 }
 
+bool searchWithDuplicate(vector<int> &A, int target) {
+    if (A.size() == 0) {
+        return false; 
+    }
+    // write your code here
+    int low = 0;
+    int high = A.size() - 1;
+    int mid;
+    while (low < high) {
+        mid = low + (high - low) / 2;
+        cout << "low: " << low << endl;
+        cout << "high: " << high << endl;
+        cout << "mid: " << mid << endl;
+        if (A[mid] == target) {
+            return true;
+        } else if (A[mid] < A[high]) {
+            if (A[mid] < target && target <= A[high]) {
+                low = mid + 1;
+            } else {
+                high = mid - 1;
+            }
+        } else if (A[mid] > A[high]) {
+            if (target >= A[low] && A[mid] > target) {
+                high = mid - 1;
+            } else {
+                low = mid + 1;
+            }
+        } else {
+            high--;
+        }
+    }
+    if (A[low] == target) {
+        return true;
+    }
+    return false;
+}
+
+int searchMatrix2(vector<vector<int> > &matrix, int target) {
+    // write your code here
+    if (matrix.size() == 0) {
+        return 0;
+    }
+    int m;
+    int size_row = matrix.size();
+    int size_col = matrix[0].size();
+    int n;
+    for (int i = 0; i < size_row; i++) {
+        if (matrix[i][0] > target) {
+            break;
+        } else {
+            m = i;
+        }
+    }
+    for (int i = 0; i < size_col; i++) {
+        if (matrix[0][i] > target) {
+            break;
+        } else {
+            n = i;
+        }
+    }
+    cout << "m: " << m << endl;
+    cout << "n: " << n << endl;
+    int count = 0; 
+    for (int i = 0; i <= m; i++) {
+        for (int j = 0; j <= n; j++) {
+            if (matrix[i][j] == target) {
+                count++;
+            } else if (matrix[i][j] > target) {
+                break;
+            }
+        }
+    }
+    return count;
+}
+
+void traverse_binary_tree(vector<vector<int>> &tree, vector<int> &tmp, TreeNode *root, int target, int sum) {
+    if (root == NULL) {
+        return;
+    }
+    tmp.push_back(root->val);
+    sum += root->val;
+    if (root->left == NULL && root->right == NULL && sum == target) {
+        tree.push_back(tmp);
+    }
+    traverse_binary_tree(tree, tmp, root->left, target, sum);
+    traverse_binary_tree(tree, tmp, root->right, target, sum);
+    sum -= root->val;
+    tmp.pop_back();
+    
+}
+
+vector<vector<int>> binaryTreePathSum(TreeNode *root, int target) {
+    // Write your code here
+    vector<vector<int>> tree;
+    vector<int> tmp;
+    traverse_binary_tree(tree, tmp, root, target,0);
+    return tree;
+}
+
+bool identical(TreeNode *a, TreeNode *b) {
+    if (a == NULL && b == NULL) {
+        return true;
+    }
+    if (a == NULL && b != NULL) {
+        return false;
+    } else if (a != NULL && b == NULL) {
+        return false;
+    } else {
+        if (a->val != b->val) {
+            return false;
+        } else {
+            return identical(a->left, b->left) &&  identical(a->right, b->right);
+        }
+    }
+}
+
+void tweak_back(TreeNode *tmp) {
+    if (tmp == NULL) {
+        return;
+    }
+    if (tmp->left != NULL && tmp->right != NULL ) {
+        if (tmp->left->val > tmp->right->val) {
+            swap(tmp->left, tmp->right);
+        }
+    } else if (tmp->left == NULL && tmp->right != NULL) {
+        swap(tmp->left, tmp->right);
+    }
+    tweak_back(tmp->left);
+    tweak_back(tmp->right);
+}
+
+bool isTweakedIdentical(TreeNode* a, TreeNode* b) {
+    // Write your code here
+    tweak_back(a);
+    tweak_back(b);
+    return identical(a, b);
+}
+
+void isSymmetric_inorder(TreeNode *root, vector<int> &result){
+    if (root == NULL) {
+        result.push_back(-1);
+        return;
+    }
+    if (root->left == NULL && root->right == NULL ){
+        result.push_back(root->val);
+        return;
+    }
+    isSymmetric_inorder(root->left, result);
+    result.push_back(root->val);
+    isSymmetric_inorder(root->right, result);
+}
+
+bool isSymmetric(TreeNode* root) {
+    // Write your code here
+    if (root == NULL) {
+        return true;
+    }
+    vector<int> result;
+    isSymmetric_inorder(root, result);
+    if (result.size() % 2 == 0) {
+        return false;
+    }
+    int size = result.size();
+    cout << "size: " << size << endl;
+    int j = size - 1;
+    for (int i = 0; i < size/2; i++) {
+        if (result[i] != result[j]) {
+            return false;
+        }
+        j--;
+    }
+    if (result[j] != root->val) {
+        return false;
+    }
+    return true;
+}
+
+bool isComplete_helper(TreeNode *root, int i, int count) {
+    if (root == NULL) {
+        return true;
+    }
+    if (i >= count) {
+        return false;
+    }
+    return isComplete_helper(root->left, 2*i + 1, count) && isComplete_helper(root->right, 2*i + 2, count);
+   
+}
+
+int count_nodes(TreeNode *root) {
+    if (root == NULL) {
+        return 0;
+    }
+    return 1 + count_nodes(root->left) + count_nodes(root->right); 
+}
+
+bool isComplete(TreeNode* root) {
+    // Write your code here
+    int num_nodes = count_nodes(root);
+    return isComplete_helper(root, 0, num_nodes);
+}
+
+
+int minDepth2(TreeNode *root) {
+    // write your code here
+    queue<TreeNode*> q;
+    if (root == NULL) {
+        return 0;
+    }
+    int min = 1;
+    q.push(root);
+    while (!q.empty()) {
+        int size = q.size();
+        while (size != 0) {
+            size--;
+            if (q.front()->left == NULL && q.front()->right == NULL ) {
+                return min;
+            }
+            if (q.front()->left != NULL ) {
+                q.push(q.front()->left);
+            }
+            if (q.front()->right != NULL) {
+                q.push(q.front()->right);
+            }
+            q.pop();
+        }
+        min++;
+    }
+
+    return min;      
+}
+
+void insert_helper(TreeNode *root, TreeNode *node) {
+
+    if (root->val > node->val) {
+        if (root->left == NULL) {
+            root->left = node;
+        } else {
+            insert_helper(root->left, node);
+        }
+    } else if (root->val < node->val) {
+        if (root->right == NULL) {
+            root->right = node;
+        } else {
+            insert_helper(root->right, node);
+        }
+    }
+}
+
+TreeNode* insertNode(TreeNode* root, TreeNode* node) {
+    // write your code here
+    if (root == NULL) {
+        return node;
+    }
+    insert_helper(root, node);
+    return root;
+}
+
+TreeNode *build(vector<int> &preorder, vector<int> &inorder, int preorder_start, int preorder_end, int inorder_start, int inorder_end) {
+    if (preorder_start > preorder_end) {
+        return NULL;
+    }
+    TreeNode *node = new TreeNode(preorder[preorder_start]);
+    int pos = -1;
+   cout << "11111" << endl;
+    for (int i = inorder_start; i <= inorder_end; i++) {
+        if (inorder[i] == node->val) {
+            pos = i;
+            break;
+        }
+    }
+   cout << "2222" << endl;
+    node->left = build(preorder, inorder, preorder_start + 1, 
+        preorder_start + pos - inorder_start, inorder_start, pos - 1);
+    node->right = build(preorder, inorder, preorder_end - inorder_end + pos + 1, 
+        preorder_end, pos + 1, inorder_end);
+    return node;
+}
+
+TreeNode *buildTree(vector<int> &preorder, vector<int> &inorder) {
+    if (preorder.size() == 0) {
+        return NULL;
+    }
+    return build(preorder, inorder, 0, preorder.size() - 1, 0, inorder.size() - 1);
+}
+
+TreeNode *buildTree_inorder_postorder_helper(vector<int> &inorder, vector<int> &postorder, int inorder_start, int inorder_end, int postorder_start, int postorder_end) {
+    if (inorder_start > inorder_end) {
+        return NULL;
+    }
+    TreeNode *node = new TreeNode(postorder[postorder_end]);
+    int pos = -1;
+    for (int i = inorder_start; i <= inorder_end; i++) {
+        if (inorder[i] == node->val ){
+            pos = i; 
+            break;
+        }
+    }
+    node->left = buildTree_inorder_postorder_helper(inorder, postorder,
+        inorder_start, pos - 1, postorder_start, postorder_start + pos -inorder_start - 1);
+    node->right = buildTree_inorder_postorder_helper(inorder, postorder,
+        pos + 1, inorder_end, postorder_start + pos - inorder_start, postorder_end - 1);
+    return node;
+}
+
+TreeNode *buildTree_inorder_postorder(vector<int> &inorder, vector<int> &postorder) {
+    // write your code here
+    return buildTree_inorder_postorder_helper(inorder, postorder, 0, inorder.size() - 1, 0, postorder.size() - 1);
+}
+
+vector<vector<int>> levelOrderBottom_lintcode(TreeNode *root) {
+    // write your code here
+    vector<vector<int>> results;
+    if (root == NULL) {
+        return results;
+    } 
+    queue<TreeNode*> q;
+    stack<vector<int>> s;
+    q.push(root);
+    while (!q.empty()) {
+        int size = q.size();
+        vector<int> level;
+        while (size != 0) {
+            level.push_back(q.front()->val);
+            if (q.front()->left != NULL){
+                q.push(q.front()->left);
+            }
+            if (q.front()->right != NULL) {
+                q.push(q.front()->right);
+            }
+            q.pop();
+            size--;
+        }
+        s.push(level);
+    }
+    while (!s.empty()) {
+        results.push_back(s.top());
+        s.pop();
+    }
+    return results;
+}
+
+vector<vector<int>> zigzagLevelOrder(TreeNode *root) {
+    // write your code here
+    vector<vector<int>> results;
+    if (root == NULL) {
+        return results;
+    }
+    queue<TreeNode*> q;
+    q.push(root);
+    int odd = 1;
+    while (!q.empty()) {
+
+        int size = q.size();
+        vector<int> level;
+        while (size != 0) {
+            level.push_back(q.front()->val);
+            if (q.front()->left != NULL) {
+                q.push(q.front()->left);
+            }
+            if (q.front()->right != NULL) {
+                q.push(q.front()->right);
+            }
+            q.pop();
+            size--;
+        }
+        if (odd%2 == 1) {
+            results.push_back(level);
+            odd++;
+        } else {
+            reverse(level.begin(), level.end());
+            results.push_back(level);
+            odd++;
+        }
+    }
+    return results;
+}
+
+void searchRange_helper(TreeNode *root, vector<int> &nums, int k1, int k2){
+    if (root == NULL) {
+        return;
+    }
+    if (root->val <= k2 && root->val >= k1) {
+        nums.push_back(root->val);
+    }
+    if (root->val > k2) {
+        searchRange_helper(root->left, nums, k1, k2);
+    } else if (root->val < k1) {
+        searchRange_helper(root->right, nums, k1, k2);
+    } else {
+        searchRange_helper(root->left, nums, k1, k2);
+        searchRange_helper(root->right, nums, k1, k2);
+    }
+    return;
+}
+
+vector<int> searchRange(TreeNode* root, int k1, int k2) {
+    // write your code here
+    vector<int> nums; 
+    searchRange_helper(root, nums, k1, k2);
+    sort(nums.begin(), nums.end());
+    return nums; 
+}
+
+string preorder_serialize(TreeNode *root, string &preorder_string) {
+    if (root == NULL) {
+        return preorder_string;
+    }
+    preorder_string += to_string(root->val);
+    preorder_string += ",";
+    preorder_serialize(root->left, preorder_string);
+    preorder_serialize(root->right, preorder_string);
+    return preorder_string;
+}
+
+string inorder_serialize(TreeNode *root, string &inorder_string) {
+    if (root == NULL) {
+        return inorder_string;
+    }
+    inorder_serialize(root->left, inorder_string);
+    inorder_string += to_string(root->val);
+    inorder_string += ",";
+    inorder_serialize(root->right, inorder_string);
+    return inorder_string;
+}
+
+string serialize(TreeNode *root) {
+    // write your code here
+    if (root == NULL) {
+        return "";
+    }
+    string preorder_string = "";
+    string inorder_string = "";
+    preorder_string = preorder_serialize(root, preorder_string);
+    preorder_string += '#';
+    inorder_string = inorder_serialize(root, inorder_string);
+    string data = preorder_string + inorder_string; 
+    return data;
+}
+
+TreeNode *deserialize(string data) {
+    // write your code here
+    if (data == "") {
+        return NULL;
+    }
+    vector<int> preorder; 
+    vector<int> inorder;
+    int size = data.size();
+    int j = -1;
+    string tmp = "";
+    for (int i = 0; i < size; i++) {    
+        if (data[i] == '#') {
+            j = i;
+            break;
+        } else if (data[i] == ',') {
+            preorder.push_back(atoi(tmp.c_str()));
+            tmp = "";
+            continue;
+        } else {
+            tmp += data[i];
+        }
+    }
+    string tmp2 = "";
+    for (j = j + 1; j < size; j++) {
+        if (data[j] == ',') {
+            inorder.push_back(atoi(tmp.c_str()));
+            tmp = "";
+            continue;
+        } else {
+            tmp += data[j];
+        }
+    }
+    for(auto x : preorder){
+        cout << x << " ";
+    }
+    cout << endl;
+    for(auto x : inorder){
+        cout << x << " ";
+    }
+    cout << endl;
+    return buildTree(preorder, inorder);
+}
+
 
 int main(){
     
-    vector<int> nums = {999,999,1000,1000,10000,0,999,999,999};
-    cout << findMin2(nums);
-    cout << endl;
+
+    TreeNode *a = new TreeNode(1);
+    TreeNode *b = new TreeNode(2);
+    TreeNode *c = new TreeNode(2);
+
+ 
+    a->left = b;
+    a->right = c;
+    TreeNode *root = deserialize(serialize(a));
+    cout << root->val << endl;
+   
+    cout << root->right->val << endl;
+    cout << root->left->val << endl;
+   
     return 0;
 }
 
