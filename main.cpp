@@ -3435,22 +3435,138 @@ TreeNode *deserialize(string data) {
     return buildTree(preorder, inorder);
 }
 
+int uniquePaths_lintcode(int m, int n) {
+    // wirte your code higere
+    vector<vector<int>> results(m, vector<int>(n));
+    for (int i = 0; i < m; i++) {
+        for (int j = 0; j < n; j++) {
+            if (i == 0) {
+                results[0][j] = 1;
+            } else {
+                if (j == 0) {
+                    results[i][0] = 1;
+                    continue;
+                }
+                results[i][j] = results[i-1][j] + results[i][j-1];
+            }
+        }
+    }
+    return results[m-1][n-1];
+}
+
+//先建立一个大小一样的 matrix, 如果是obstacle 位置是0  别的都一样
+int uniquePathsWithObstacles(vector<vector<int> > &obstacleGrid) {
+    // write your code here
+    int m = obstacleGrid.size();
+    int n = obstacleGrid[0].size();
+    cout << "m: " << m << endl;
+    cout << "n: " << n << endl;
+    vector<vector<int>> results(m, vector<int>(n));
+    int pos = INT_MAX;
+    for (int i = 0; i < n; i++) {
+        if (obstacleGrid[0][i] == 1){
+            results[0][i] = 0;
+            pos = i;
+        } else {
+            if (i > pos) {
+                results[0][i] = 0;
+            } else {
+                results[0][i] = 1;
+            }
+        }
+    }
+    int pos2 = INT_MAX;
+    for (int i = 0; i < m; i++) {
+        if (obstacleGrid[i][0] == 1){
+            results[i][0] = 0;
+            pos2 = i;
+        } else {
+            if (i > pos2) {
+                results[i][0] = 0;
+            } else {
+                results[i][0] = 1;
+            }
+        }
+    }
+    for (int i = 1; i < m; i++) {
+        for (int j = 1; j < n; j++) {
+            if (obstacleGrid[i][j] == 1) {
+                results[i][j] = 0;
+            } else {
+                results[i][j] = results[i-1][j] + results[i][j-1];
+            }
+        }
+    }
+    return results[m-1][n-1];
+}
+
+int minPathSum_lintcode(vector<vector<int> > &grid) {
+    // write your code here
+    int m = grid.size();
+    int n = grid[0].size();
+    vector<vector<int>> results(m, vector<int>(n));
+    for (int i = 0; i < n; i++) {
+        if (i == 0) {
+            results[0][i] = grid[0][i];
+        } else {
+            results[0][i] = grid[0][i] + results[0][i - 1];
+        }
+    }
+    for (int i = 0; i < m; i++) {
+        if (i == 0) {
+            continue;
+        } else {
+            results[i][0] = results[i - 1][0] + grid[i][0];
+        }
+    }
+    for (int i = 1; i < m; i++) {
+        for (int j = 1; j < n; j++) {
+            results[i][j] = min(results[i][j - 1], results[i - 1][j]) + grid[i][j];
+        }
+    }
+    return results[m - 1][n - 1];
+}
+
+// 1. vector vector 三角形
+int minimumTotal(vector<vector<int> > &triangle) {
+    // write your code here
+    int m = triangle.size();
+    int n = triangle[m - 1].size();
+    vector<vector<int>> results(m, vector<int>(n));
+    vector<vector<int>> container(m, vector<int>(n));
+    for (int i = 0; i < m; i++) {
+        for (unsigned long j = 0; j < triangle[i].size(); j++) {
+            container[i][j] = triangle[i][j];
+        }
+    }
+    for (int i = 0; i < m; i++) {
+        if (i == 0) {
+            results[i][0] = container[i][0];
+        } else {
+            results[i][0] = results[i-1][0] + container[i][0];
+        } 
+    }
+
+    for (int i = 1; i < m; i++) {
+        for (int j = 1; j <= i; j++) {
+            if (j == i) {
+                results[i][j] = container[i][j] + results[i - 1][j - 1];
+            } else {
+                results[i][j] = min(results[i-1][j], results[i-1][j-1]) + container[i][j];
+            }
+        }
+    }
+    int min = INT_MAX;
+    for (auto x : results[m - 1]) {
+        if (x < min) {
+            min = x;
+        }
+    }
+    return min;
+}
 
 int main(){
     
-
-    TreeNode *a = new TreeNode(1);
-    TreeNode *b = new TreeNode(2);
-    TreeNode *c = new TreeNode(2);
-
- 
-    a->left = b;
-    a->right = c;
-    TreeNode *root = deserialize(serialize(a));
-    cout << root->val << endl;
-   
-    cout << root->right->val << endl;
-    cout << root->left->val << endl;
    
     return 0;
 }
