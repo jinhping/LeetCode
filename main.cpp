@@ -3565,9 +3565,144 @@ int minimumTotal(vector<vector<int> > &triangle) {
     return min;
 }
 
+bool canJump(vector<int>& nums) {
+    int n = nums.size();
+    int maxCover = 0;
+    for (int i = 0; i < n && i <= maxCover; i++){
+        if (nums[i] + i > maxCover) {
+            maxCover = nums[i] + i;
+        }
+        if (maxCover >= n - 1) {
+            return true;
+        }
+    }
+    return false;
+}
+/*
+int jump(vector<int> &nums) {
+    int size = nums.size();
+    vector<int> tmp(size, -1);
+    if (size == 0) {
+        return 0;
+    }
+    if (size == 1) {
+        return 0;
+    }
+    tmp[0] = 1;
+    int count = 1;
+    for (int i = 0; i < size; i++) {
+        int reachable_steps = nums[i];
+        cout << "reachable_steps: " << reachable_steps << endl;
+        for (int j = 1; j <= reachable_steps && i + j < size; j++) {
+            if (tmp[i + j] < count && tmp[i + j] != -1) {
+                cout << "i + j  1: " << i + j << endl;
+                cout << "count: " << count << endl;
+                continue;
+            } else if (tmp[i + j] == -1) {
+                
+                if (i == 0) {
+                    cout << "i + j  2-1: " << i + j << endl;
+                    cout << "count: " << tmp[i] << endl;
+                    tmp[i + j] = tmp[i] ;
+
+                } else {
+                    
+                    cout << "i + j  2-2: " << i + j << endl;
+                    cout << "count: " << tmp[i] + 1 << endl;
+                    tmp[i + j] = tmp[i] + 1;
+
+                }
+            } else {
+                tmp[i + j] = count;
+                cout << "i + j  3: " << i + j << endl;
+                cout << "count: " << count << endl;
+            }
+        }
+        if (tmp[size - 1] != -1) {
+            return tmp[size - 1];
+        }
+        count++;
+    }
+    return -1;
+}
+*/
+
+int longestIncreasingSubsequence(vector<int> nums) {
+    // write your code here
+    int size = nums.size();
+    if (size == 0) {
+        return 0;
+    }
+    if (size == 1) {
+        return 1;
+    }
+    vector<int> tmp(size, 1);
+    for (int i = 1; i < size; i++) {
+        for (int j = 0; j < i; j++) {
+            if (nums[j] <= nums[i]) {
+                if (tmp[j] + 1 > tmp[i]) {
+                    tmp[i] = tmp[j] + 1;
+                }
+            }
+        }
+    }
+    int max = INT_MIN;
+    for (auto x : tmp) {
+        if (x > max) {
+            max = x;
+        }
+    } 
+    return max;
+}
+
+bool wordBreak(string s, unordered_set<string> &dict) {
+    // write your code here
+    vector<bool> result (s.length() + 1, false);
+    result[0] = true;
+    for (unsigned long i = 0; i < s.length(); i++) {
+        for (int j = i; j >= 0; j--) {
+            if (result[j] && dict.count(s.substr(j,i-j+1))!=0) {
+                result[i + 1] = true;
+                break;
+            }
+        }
+    }
+    return result[s.size()];
+}
+
+bool isPalindromo(string s, int start, int end) {
+    while (start <= end) {
+        if (s[start++] != s[end--]) {
+            return false;
+        }
+    }
+    return true;
+}
+
+void dfs(int index, string s, vector<string> &path, vector<vector<string>> &results) {
+    if (index == s.size()) {
+        results.push_back(path);
+        return;
+    }
+    for (int i = index; i < s.size(); i++) {
+        path.push_back(s.substr(index, i - index + 1));
+        dfs(i+1, s, path, results);
+        path.pop_back();
+    }
+}
+
+vector<vector<string>> partition(string s) {
+    vector<vector<string>> results; 
+    vector<string> path;
+    if (s.empty()) {
+        return results;
+    }        
+    dfs(0, s, path, results);
+    return results;
+}
+
 int main(){
-    
-   
+    vector<int> nums = {1,2,1,1,1};
     return 0;
 }
 
