@@ -3680,14 +3680,18 @@ bool isPalindromo(string s, int start, int end) {
 }
 
 void dfs(int index, string s, vector<string> &path, vector<vector<string>> &results) {
-    if (index == s.size()) {
+    int tmp = s.size();
+    if (index == tmp) {
         results.push_back(path);
         return;
     }
-    for (int i = index; i < s.size(); i++) {
-        path.push_back(s.substr(index, i - index + 1));
-        dfs(i+1, s, path, results);
-        path.pop_back();
+    for (int i = index; i < tmp; i++) {
+        if (isPalindromo(s, index, i)) {
+            path.push_back(s.substr(index, i - index + 1));
+            dfs(i+1, s, path, results);
+            path.pop_back();
+        }
+        
     }
 }
 
@@ -3701,8 +3705,98 @@ vector<vector<string>> partition(string s) {
     return results;
 }
 
+//2D vector vector
+int longestCommonSubsequence(string A, string B) {
+    // write your code here
+    int size_A = A.length();
+    int size_B = B.length();
+    if (size_A == 0 || size_B == 0) {
+        return 0;
+    }
+    vector<vector<int>> results(size_A + 1, vector<int>(size_B + 1));
+   // cout << results.size() << endl;
+    //cout << results[0].size() << endl;
+    for (int i = 0; i < size_A + 1; i++) {
+        results[i][0] = 0;
+    }
+    for (int i = 0; i < size_B + 1; i++) {
+        results[0][i] = 0; 
+    }
+    for (int i = 1; i < size_A + 1; i++) {
+        for (int j = 1; j < size_B + 1; j++) {
+            if (A[i-1] != B[j-1]) {
+                results[i][j] = max(results[i-1][j], results[i][j-1]);
+            } else if (A[i-1] == B[j-1]) {
+                results[i][j] = max(max(results[i-1][j], results[i][j-1]), results[i-1][j-1] + 1);
+            }
+        }
+    }
+ //   cout << "size_A: " << size_A << endl;
+  //  cout << "size_B: " << size_B << endl;
+    return results[size_A][size_B];
+}
+
+int minDistance(string word1, string word2) {
+    // write your code here
+    int size_word1 = word1.length();
+    int size_word2 = word2.length();
+    if (size_word1 == 0) {
+        return size_word2;
+    } else if (size_word2 == 0) {
+        return size_word1;
+    }
+    vector<vector<int>> results(size_word1 + 1, vector<int>(size_word2 + 1));
+    for (int i = 0; i < size_word1 + 1; i++) {
+        results[i][0] = i;
+    }
+    for (int i = 0; i < size_word2 + 1; i++) {
+        results[0][i] = i;
+    }
+    for (int i = 1; i < size_word1 + 1; i++) {
+        for (int j = 1; j < size_word2 + 1; j++) {
+            if (word1[i-1] == word2[j-1]) {
+                results[i][j] = min(min(results[i-1][j] + 1, results[i][j-1] + 1), results[i-1][j-1]);
+            } else if (word1[i-1] != word2[j-1]) {
+                results[i][j] = min(min(results[i-1][j] + 1, results[i][j-1] + 1), results[i-1][j-1] + 1);
+            }
+        }
+    }
+    return results[size_word1][size_word2];
+}
+
+int numDistinct(string &S, string &T) {
+    // write your code here
+    int size_S = S.length();
+    int size_T = T.length();
+    if (size_T == 0) {
+        return 1;
+    } else if (size_S == 0) {
+        return 0;
+    }
+    vector<vector<int>> results(size_S + 1, vector<int>(size_T + 1));
+    for (int i = 0; i < size_S + 1; i++) {
+        results[i][0] = 1;
+    }
+    for (int i = 1; i < size_T + 1; i++) {
+        results[0][i] = 0;
+    }
+    for (int i = 1; i < size_S + 1; i++) {
+        for (int j = 1; j < size_T + 1; j++) {
+            if (S[i-1] == T[j-1]) {
+                results[i][j] = results[i-1][j] + results[i-1][j-1];
+            } else if (S[i-1] != T[j-1]) {
+                results[i][j] = results[i-1][j];
+            }
+        }
+    }
+    return results[size_S][size_T];
+}
+
 int main(){
     vector<int> nums = {1,2,1,1,1};
+    string A = "ABCD";
+    string B = "EACB";
+    cout << longestCommonSubsequence(A, B) << endl;
     return 0;
 }
 
