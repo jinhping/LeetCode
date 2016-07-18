@@ -3910,11 +3910,341 @@ int backPackII(int m, vector<int> A, vector<int> V) {
     return results[size_A][m];
 }
 
+int longestIncreasingContinuousSubsequence(vector<int>& A) {
+    // Write your code here
+    if (A.size() == 0) {
+        return 0;
+    }
+    if (A.size() == 1) {
+        return 1;
+    }
+    int size = A.size();
+    vector<int> B(size, 1);
+    for (int i = 1; i < size; i++) {
+        if (A[i] < A[i - 1]) {
+            B[i] = B[i - 1] + 1;
+        } else { 
+            B[i] = 1;
+        }
+    }
+    vector<int> C(size, 1);
+    for (int i = size - 2; i >= 0; i--) {
+        if (A[i] < A[i + 1] ) {
+            C[i] = C[i + 1] + 1;
+        } else {
+            C[i] = 1;
+        }
+    }
+    int max_B = INT_MIN;
+    int max_C = INT_MIN;
+    for (auto x : B) {
+        if (x > max_B) {
+            max_B = x;
+        }
+    }
+    for (auto x : C) {
+        if (x > max_C) {
+            max_C = x;
+        }
+    }
+    if (max_B >= max_C ) {
+        return max_B;
+    } else 
+        return max_C;
+}
+
+ListNode *partition_lintcode(ListNode *head, int x) {
+    // write your code here
+    if (head == NULL) {
+        return head;
+    }
+    ListNode *first_half = new ListNode(0);
+    ListNode *first_half_head = first_half;
+    ListNode *second_half = new ListNode(0);
+    ListNode *second_half_head = second_half;
+    ListNode *cur = head;
+ 
+    while (cur != NULL) {
+        if (cur->val < x) {
+            ListNode *tmp = new ListNode(cur->val);
+            first_half->next = tmp;
+            first_half = tmp;
+        } else {
+            ListNode *tmp = new ListNode(cur->val);
+            second_half->next = tmp;
+            second_half = tmp;
+        }
+        cur = cur->next;
+    }
+    first_half->next = second_half_head->next;
+    return first_half_head->next;
+}
+
+ListNode * deleteDuplicates(ListNode *head) {
+    // write your code here
+    if (head == NULL) {
+        return head;
+    }
+    if (head->next == NULL) {
+        return head;
+    }
+    if (head->next->next == NULL ) {
+        if (head->val != head->next->val) {
+            return head;
+        } else {
+            return NULL;
+        }
+    }
+    ListNode *low = head;
+    ListNode *mid = head->next;
+    ListNode *high = head->next->next;
+    ListNode *cur = new ListNode(0);
+    ListNode *cur_head = cur;
+    if (low->val != mid->val) {
+        ListNode *tmp = new ListNode(low->val);
+        cur->next = tmp;
+        cur = tmp;
+    }
+    ListNode *second_last = new ListNode(0);
+    while (head->next->next != NULL) {
+        if (mid->val != low->val && mid->val != high->val) {
+            ListNode *tmp = new ListNode(mid->val);
+            cur->next = tmp;
+            cur = tmp;
+            head = head->next;
+        } else {
+            head = head->next;
+        }
+        second_last->next = mid;
+        low = head;
+        mid = head->next;
+        high = head->next->next;
+    }
+   // cout << head->val << " 111 " << endl;
+   // cout << second_last->next->val << endl;
+    if (head->next->val != second_last->next->val) {
+        ListNode *tmp = new ListNode(head->next->val);
+        cur->next = tmp;
+    }
+    return cur_head->next;
+}
+
+ListNode *reverseBetween(ListNode *head, int m, int n) {
+    // write your code here
+    if (head == NULL) {
+        return head;
+    }
+    if (m == n) {
+        return head;
+    }
+    cout << "111111" << endl;
+    ListNode *cur = head;
+    ListNode *second_loop = head;
+    int index = 1;
+    vector<int> container;
+    while (cur != NULL) {
+        if (index > n) {
+            break;
+        }
+        if (index >= m && index <= n ) {
+            container.push_back(cur->val);
+        }
+        index++;
+        cur = cur->next;
+    }
+        cout << "22222222  " << container.size()<< endl;
+        for (auto x : container) {
+            cout << x << endl;
+        }
+
+    reverse(container.begin(), container.end());
+    int position = 1;
+    int vector_index = 0;
+    while (second_loop != NULL) {
+        cout << "position: " << position << endl;
+        if (position > n) {
+            break;
+        }
+        if (position >= m && position <= n ) {
+            second_loop->val = container[vector_index];
+            vector_index++;
+        }
+        position++;
+        second_loop = second_loop->next;
+    }
+        cout << "3333333" << endl;
+
+    return head;
+}
+
+ListNode *sortList_mergesort(ListNode *head) {
+    // write your code here
+    return head;
+}
+
+ListNode *sortList_quicksort(ListNode *head) {
+    // write your code here
+    return head;
+}
+
+void quicksort_median(vector<int> &nums, int left, int right) {
+    if (left >= right) {
+        return;
+    }
+    int pivot = nums[left];
+    int low = left;
+    int high = right;
+    // cout << "pivot: " << pivot << endl;
+    // cout << "low: " << low << endl;
+    // cout << "high: " << high << endl;
+    // cout << "------------" << endl;
+    while (low < high) {
+        while (low < high && nums[high] >= pivot) {
+            high--;
+        }
+        nums[low] = nums[high];
+        while (low < high && nums[low] <= pivot) {
+            low++;
+        }
+        nums[high] = nums[low];
+    }
+    nums[low] = pivot;
+    quicksort_median(nums, left, low - 1);
+    quicksort_median(nums, low + 1, right);
+}
+
+//quick sort
+int median(vector<int> &nums) {
+    // write your code here
+    if (nums.size() == 1) {
+        return nums[0];
+    }
+    int length = nums.size();
+    quicksort_median(nums, 0, length - 1);
+    // for (auto x : nums) {
+    //     cout << x << " ";
+    // }
+    // cout << endl;
+    if (length%2 == 1) {
+        return nums[(length - 1) / 2];
+    } else {
+        return nums[(length - 2) / 2];
+    }
+}
+
+void sortIntegers2_quicksort(vector<int> &A, int left, int right) {
+    if (left >= right) {
+        return;
+    }
+    int pivot = A[left];
+    int low = left;
+    int high = right;
+    cout << "pivot: " << pivot << endl;
+    cout << "low: " << low << endl;
+    cout << "high: " << high << endl;
+    cout << "------------" << endl;
+    while (low < high) {
+        while (low < high && A[high] >= pivot) {
+            high--;
+        }
+        A[low] = A[high];
+        while (low < high && A[low] <= pivot) {
+            low++;
+        }
+        A[high] = A[low];
+    }
+    A[low] = pivot;
+    sortIntegers2_quicksort(A, left, low - 1);
+    sortIntegers2_quicksort(A, low + 1, right);  
+}
+
+//quick sort lintcode Sort Integers II
+void sortIntegers2(vector<int>& A) {
+    // Write your code here
+    int length = A.size();
+    sortIntegers2_quicksort(A, 0, length - 1);
+    return;
+}
+
+void kthLargestElement_quicksort(vector<int> &nums, int left, int right) {
+    if (left >= right) {
+        return;
+    }
+    int pivot = nums[left];
+    int low = left;
+    int high = right;
+    while (low < high) {
+        while (low < high && nums[high] >= pivot) {
+            high--;
+        }
+        nums[low] = nums[high];
+        while (low < high && nums[low] <= pivot) {
+            low++;
+        }
+        nums[high] = nums[low];
+    }
+    nums[low] = pivot;
+    kthLargestElement_quicksort(nums, left, low - 1);
+    kthLargestElement_quicksort(nums, low + 1, right);
+}
+
+int kthLargestElement(int k, vector<int> nums) {
+    // write your code here
+    int length = nums.size();
+    kthLargestElement_quicksort(nums, 0, length - 1);
+    return nums[length - k];
+}
+
+void merge(vector<int> &A, int low, int high, int mid) {
+    int i = low;
+    int j = mid + 1;
+    int k = 0;
+    vector<int> A2(high - low + 1, 0);
+
+    while (i <= mid && j <= high) {
+        if (A[i] < A[j]) {
+            A2[k++] = A[i++];
+        }else {
+            A2[k++] = A[j++];
+        }
+    }
+    while (i <= mid) {
+        A2[k++] = A[i++];
+    }
+    while (j <= high) {
+        A2[k++] = A[j++];
+    }
+    int size = A2.size();
+    k = 0;
+    while (k < size) {
+        A[k + low] = A2[k];
+        k++;
+    }
+}
+
+void sortIntegers2_merge(vector<int> &A, int low, int high) {
+    int mid = (low + high) / 2;
+    if (low < high) {
+        sortIntegers2_merge(A, low, mid);
+        sortIntegers2_merge(A, mid + 1, high);
+        merge(A, low, high, mid);
+    }
+}
+
+void sortIntegers2_mergesort(vector<int>& A) {
+    // Write your code here
+    int length = A.size();
+    sortIntegers2_merge(A, 0, length - 1);
+    return;
+}
+
 int main(){
-    vector<int> A = {2, 3, 5, 7};
-    vector<int> V = {1, 5, 2, 4};
-    int m = 10 ;
-    cout << backPackII(m, A, V) << endl;
+    vector<int> nums = {3,2,1};
+    sortIntegers2_mergesort(nums);
+    for (auto x : nums) {
+        cout << x << " ";
+    }
+    cout << endl;
     return 0;
 }
 
