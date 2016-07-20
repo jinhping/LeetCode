@@ -4077,15 +4077,6 @@ ListNode *reverseBetween(ListNode *head, int m, int n) {
     return head;
 }
 
-ListNode *sortList_mergesort(ListNode *head) {
-    // write your code here
-    return head;
-}
-
-ListNode *sortList_quicksort(ListNode *head) {
-    // write your code here
-    return head;
-}
 
 void quicksort_median(vector<int> &nums, int left, int right) {
     if (left >= right) {
@@ -4238,12 +4229,263 @@ void sortIntegers2_mergesort(vector<int>& A) {
     return;
 }
 
-int main(){
-    vector<int> nums = {3,2,1};
-    sortIntegers2_mergesort(nums);
-    for (auto x : nums) {
-        cout << x << " ";
+ListNode *findmid(ListNode *head) {
+    ListNode *slow = head;
+    ListNode *fast = head -> next;
+    while (fast != NULL && fast -> next != NULL) {
+        slow = slow -> next;
+        fast = fast -> next -> next;
     }
+    return slow;
+}
+
+ListNode * sortList_merge(ListNode *left, ListNode *right) {
+    ListNode *dummy = new ListNode(0);
+    ListNode *tail = dummy;
+    while (left != NULL && right != NULL) {
+        if (left -> val < right -> val) {
+            tail -> next = left;
+            tail = tail -> next;
+            left = left -> next;
+        } else {
+            tail -> next = right;
+            tail = tail -> next;
+            right = right -> next;
+        }
+    }
+    if (left != NULL) {
+        tail -> next = left;
+    } else {
+        tail -> next = right;
+    }
+    return dummy->next;
+}
+
+ListNode *sortList_mergesort(ListNode *head) {
+    // write your code here
+    if (head == NULL || head -> next == NULL) {
+        return head;
+    }
+    ListNode *mid = findmid(head);
+    ListNode *right = sortList_mergesort(mid -> next);
+    mid -> next = NULL;
+    ListNode *left = sortList_mergesort(head);
+    return sortList_merge(left, right);
+}
+
+
+void reorderList(ListNode *head) {
+    // write your code here
+    if (head == NULL || head -> next == NULL) {
+        return;
+    }
+    ListNode *cur = head;
+    int length = 0;
+    ListNode *tmp = head;
+    ListNode *dummy = new ListNode(0);
+    ListNode *result = dummy;
+    while (cur != NULL) {
+        cur = cur -> next;
+        length++;
+    }
+    int i = 0; 
+    queue<ListNode*> q;
+    stack<ListNode*> s;
+    while (tmp != NULL) {
+        ListNode * t = new ListNode(tmp -> val);
+        if (i < length / 2) {
+            q.push(t);
+        } else {
+            s.push(t);
+        }
+        i++;
+        tmp = tmp -> next;
+    }
+    // cout << q.size() << endl;
+    // cout << s.size() << endl;
+    // // cout << "q -> val: " << q.front() -> val << endl;
+    // q.pop();
+    // cout << q.front() -> val << endl;
+    // cout << s.top() -> val << endl;
+    // s.pop();
+    // cout << s.top() -> val << endl;
+    // s.pop();
+    // cout << s.top() -> val << endl;
+    while (!q.empty() && !s.empty()) {
+        // cout << q.front() -> val << endl;
+        // cout << s.top() -> val << endl;
+        // cout << "--------------" << endl;
+
+        dummy -> next = q.front();
+        //dummy = dummy -> next;
+        dummy -> next -> next = s.top();
+        dummy = dummy -> next -> next;
+        q.pop();
+        s.pop();
+    }
+    // cout << q.size() << endl;
+    // cout << s.size() << endl;
+    // return;
+   // dummy = dummy -> next;
+    if (!s.empty()) {
+        dummy -> next = s.top();
+    }
+    // cout << result -> val << endl;
+    // cout << result -> next -> val << endl;
+    // cout << result -> next -> next -> val << endl;
+    result = result -> next; 
+    while (head != NULL) {
+        head -> val = result -> val;
+        head = head -> next;
+        result = result -> next;
+    }
+}
+
+bool hasCycle_lintcode(ListNode *head) {
+    // write your code here
+    if (head == NULL) {
+        return false;
+    }
+    ListNode *slow = head;
+    ListNode *fast = head -> next;
+    while (fast != NULL && fast -> next != NULL) {
+        if (slow == fast) {
+            return true;
+        }
+        slow = slow -> next;
+        fast = fast -> next -> next;
+    }
+    return false;
+}
+
+struct compare {
+    bool operator()(const ListNode* l, const ListNode* r) {
+        return l->val > r->val;
+    }
+};
+
+ListNode* mergeKLists(vector<ListNode*>& lists) {
+    priority_queue<ListNode*, vector<ListNode*>, compare> pq;
+    for (unsigned long i = 0; i < lists.size(); i++) {
+        while (lists[i] != NULL) {
+            pq.push(lists[i]);
+            lists[i] = lists[i] -> next;
+        }
+    }
+    if (pq.empty()) {
+        return NULL;
+    }
+    ListNode * dummy = pq.top();
+    ListNode *tail = dummy;
+    pq.pop();
+    while (!pq.empty()) {
+        tail -> next = pq.top();
+        pq.pop();
+        tail = tail -> next;
+    }
+    tail -> next = NULL;
+    return dummy;
+}
+
+struct RandomListNode {
+    int label;
+    RandomListNode *next, *random;
+    RandomListNode(int x) : label(x), next(NULL), random(NULL) {}
+};
+
+RandomListNode *copyRandomList(RandomListNode *head) {
+    // write your code here
+    RandomListNode *newHead, *l1, *l2;
+    if (head == NULL) return NULL;
+    for (l1 = head; l1 != NULL; l1 = l1->next->next) {
+        l2 = new RandomListNode(l1->label);
+        l2->next = l1->next;
+        l1->next = l2;
+    }
+    newHead = head->next;
+    for (l1 = head; l1 != NULL; l1 = l1->next->next) {
+        if (l1->random != NULL) l1->next->random = l1->random->next;
+    }    
+    for (l1 = head; l1 != NULL; l1 = l1->next) {
+        l2 = l1->next;
+        l1->next = l2->next;
+        if (l2->next != NULL) l2->next = l2->next->next;
+    }
+    return newHead;
+}
+
+ListNode *node; 
+
+TreeNode *inorder_tree(int start, int end) {
+    if (start > end) {
+        return NULL;
+    }
+    int mid = start + (end - start) / 2;
+    TreeNode * left = inorder_tree(start, mid - 1);
+    TreeNode *tree_node = new TreeNode(node -> val);
+    tree_node -> left = left;
+    node = node -> next;
+    TreeNode * right = inorder_tree(mid + 1, end);
+    tree_node -> right = right;
+    return tree_node;
+}
+
+TreeNode* sortedListToBST(ListNode* head) {
+    if (head == NULL) {
+        return NULL;
+    }
+    int size = 0;
+    node = head;
+    ListNode *runner = head;
+    while (runner != NULL) {
+        size++;
+        runner = runner -> next;
+    }
+    return inorder_tree(0, size - 1);
+}
+
+//second version: without extra space
+ListNode *detectCycle_lintcode(ListNode *head) {
+    // write your code here
+    if (head == NULL || head -> next == NULL) {
+        return NULL;
+    }
+    bool hasCycle = false;
+    ListNode *slow = head;
+    ListNode *fast = head;
+    while (fast != NULL && fast -> next != NULL) {
+        slow = slow -> next;
+        fast = fast -> next -> next;
+        if (slow == fast) {
+            hasCycle = true;
+            break;
+        }
+    }
+    if (hasCycle == false) {
+        return NULL;
+    }
+    while (slow != head) {
+        slow = slow -> next;
+        head = head -> next;
+    }
+    return slow;
+}
+
+int main(){
+    ListNode *tmp1 = new ListNode(1);
+    ListNode *tmp2 = new ListNode(2);
+    ListNode *tmp3 = new ListNode(3);
+    ListNode *tmp4 = new ListNode(2);
+    ListNode *tmp5 = new ListNode(1);
+
+    tmp1 -> next = tmp2;
+    tmp2 -> next = tmp3;
+    tmp3 -> next = tmp4;
+    tmp4 -> next = tmp5;
+    tmp5 -> next = NULL;
+
+    
+ 
     cout << endl;
     return 0;
 }
