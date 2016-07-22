@@ -4471,22 +4471,264 @@ ListNode *detectCycle_lintcode(ListNode *head) {
     return slow;
 }
 
+vector<int> mergeSortedArray(vector<int> &A, vector<int> &B) {
+    // write your code here
+    vector<int> results;
+    int size_A = A.size();
+    int size_B = B.size();
+    int i = 0;
+    int j = 0;
+    while (i < size_A && j < size_B) {
+        if (A[i] < B[j]) {
+            results.push_back(A[i]);
+            i++;
+        } else if (A[i] > B[j]) {
+            results.push_back(B[j]);
+            j++;
+        } else {
+            results.push_back(A[i]);
+            results.push_back(B[j]);
+            i++;
+            j++;
+        }
+    }
+    cout << i << endl;
+    cout << j << endl;
+    cout << size_A << endl;
+    cout << size_B << endl;
+    while (i != size_A) {
+        results.push_back(A[i]);
+        i++;
+    }
+    while (j != size_B) {
+        results.push_back(B[j]);
+        j++;
+    }
+        cout << "assss" << endl;
+
+    return results;
+}
+
+void mergeSortedArray(int A[], int m, int B[], int n) {
+    // write your code here
+    int i = 0;
+    int j = 0;
+    vector<int> results;
+    while (i < m && j < n) {
+        if (A[i] < B[j]) {
+            results.push_back(A[i]);
+            i++;
+        } else if (A[i] > B[j]) {
+            results.push_back(B[j]);
+            j++;
+        } else {
+            results.push_back(A[i]);
+            results.push_back(B[j]);
+            i++;
+            j++;
+        }
+    }
+    while (i != m) {
+        results.push_back(A[i]);
+        i++;
+    }
+    while (j != n) {
+        results.push_back(B[j]);
+        j++;
+    }
+    int k = 0;
+    for (auto x : results) {
+        A[k] = x;
+        k++;
+    }
+}
+
+vector<int> intersection_lintcode(vector<int>& nums1, vector<int>& nums2) {
+    // Write your code here
+    vector<int> results;
+    unordered_set<int> s1;
+    unordered_set<int> s2;
+    for (auto x : nums1) {
+        s1.insert(x);
+    }
+    for (auto x : nums2) {
+        s2.insert(x);
+    }
+    for (auto x : s1) {
+        if (s2.find(x) != s2.end()) {
+            results.push_back(x);
+        }
+    }
+    return results;
+}
+
+// double findMedianSortedArrays(vector<int> A, vector<int> B) {
+//     // write your code here
+// }
+
+int maxProfit_lintcode(vector<int> &prices) {
+    // write your code here
+    if (prices.size() == 0 || prices.size() == 1) {
+        return 0;
+    }
+    vector<int> results(prices.size(), 0);
+    int min = prices[0];
+    int size = results.size();
+    for (int i = 1; i < size; i++) {
+        int tmp = prices[i] - min;
+        if (tmp > results[i - 1]) {
+            results[i] = tmp;
+        } else {
+            results[i] = results[i - 1];
+        }
+        if (min > prices[i]) {
+            min = prices[i];
+        }
+    }
+    return results.back();
+}
+
+int maxSubArray(vector<int> nums) {
+    // write your code here
+    int size = nums.size();
+    vector<int> results(size, 0);
+    results[0] = nums[0];
+    int max = nums[0];
+
+    for (int i = 1; i < size; i++) {
+        if (results[i - 1] < 0) {
+            results[i] = 0 + nums[i];
+        } else {
+            results[i] = results[i - 1] + nums[i];
+        }
+        if (results[i] > max) {
+            max = results[i];
+        }
+    }
+    return max;
+}
+
+int maxProfit2_lintcode(vector<int> &prices) {
+    // write your code here
+    if (prices.size() == 0 || prices.size() == 1) {
+        return 0;
+    }
+    int size = prices.size();
+    vector<int> results(prices.size(), 0);
+    int min = prices[0];
+    for (int i = 1; i < size; i++) {
+        if (prices[i] > min) {
+            results[i] = results[i - 1] + (prices[i] - min);
+            min = prices[i];
+        } else {
+            results[i] = results[i - 1];
+            min = prices[i];
+        }
+    }
+    return results.back();
+}
+
+int maxProfit3(vector<int> &prices) {
+    // write your code here
+    if (prices.size() == 0 || prices.size() == 1) {
+        return 0;
+    }
+    int hold1 = INT_MIN, hold2 = INT_MIN;
+    int release1 = 0, release2 = 0;
+    for (auto x : prices) {
+        hold1 = max(-x, hold1);
+        release1 = max(release1, hold1 + x);
+        hold2 = max(hold2, release1 - x);
+        release2 = max(release2, hold2 + x);
+    }
+    return release2;
+}
+
+vector<int> subarraySum(vector<int> nums){
+    // write your code here
+    unordered_map<int, int> m;
+    if (nums[0] == 0) {
+        vector<int> results = {0, 0};
+        return results;
+    }
+    m[nums[0]] = 0;
+    int size = nums.size();
+    int sum = nums[0];
+    for (int i = 1; i < size; i++) {
+        sum += nums[i];
+        cout << "sum: " << sum << endl;
+        if (nums[i] == 0) {
+            cout << "1111" << endl;
+            vector<int> results = {i, i};
+            return results;
+        }
+        if (sum == 0) {
+                        cout << "2222" << endl;
+
+            vector<int> results = {0, i};
+            return results;
+        }
+        if (m.find(sum) != m.end()) {
+                        cout << "3333" << endl;
+            int c = m[sum];
+            cout << "c: " << c << endl;
+            vector<int> results = {m[sum] + 1, i};
+            return results;
+        }
+        m[sum] = i;
+    }   
+    vector<int> results = {-1, -1};
+    return results;
+}
+
+vector<int> twoSum_lintcode(vector<int> &nums, int target) {
+    // write your code here
+    unordered_map<int, int> m;
+    int size = nums.size();
+    for (int i = 0; i < size; i++) {
+        if (m.find(target - nums[i]) != m.end()) {
+            vector<int> results = {m[target - nums[i]] + 1, i + 1};
+            return results;
+        } else {
+            m[nums[i]] = i;
+        }
+    }
+    vector<int> results = {-1, -1};
+    return results;
+}
+
+int twoSumCloset(vector<int>& nums, int target) {
+    // Write your code here
+    sort(nums.begin(), nums.end());
+    int left = 0;
+    int right = nums.size() - 1;
+    int diff = INT_MAX;
+    while (left < right) {
+        int sum = nums[left] + nums[right];
+        if (sum == target) {
+            return 0;
+        } else if (sum > target) {
+            right = right - 1;
+        } else {
+            left = left + 1;
+        }
+        if (diff > abs(sum - target)) {
+            diff = abs(sum - target);
+        }
+    }
+    return diff;
+}
+
 int main(){
-    ListNode *tmp1 = new ListNode(1);
-    ListNode *tmp2 = new ListNode(2);
-    ListNode *tmp3 = new ListNode(3);
-    ListNode *tmp4 = new ListNode(2);
-    ListNode *tmp5 = new ListNode(1);
-
-    tmp1 -> next = tmp2;
-    tmp2 -> next = tmp3;
-    tmp3 -> next = tmp4;
-    tmp4 -> next = tmp5;
-    tmp5 -> next = NULL;
-
+    vector<int> A = {3, 1, -1};
+ 
+    vector<int> results = subarraySum(A);
+    for (auto x : results) {
+        cout << x << " ";
+    }
+    cout << endl;
     
  
-    cout << endl;
     return 0;
 }
 
