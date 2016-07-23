@@ -4719,14 +4719,133 @@ int twoSumCloset(vector<int>& nums, int target) {
     return diff;
 }
 
-int main(){
-    vector<int> A = {3, 1, -1};
- 
-    vector<int> results = subarraySum(A);
-    for (auto x : results) {
-        cout << x << " ";
+void swap(vector<int> &nums, int j, int i) {
+    int tmp = nums[j];
+    nums[j] = nums[i];
+    nums[i] = tmp;
+}
+
+void sortColors_lintcode(vector<int> &nums) {
+    int size = nums.size();
+    if (size == 0 || size == 1) {
+        return;
     }
-    cout << endl;
+    int left = 0;
+    int right = size - 1;
+    int i = 0;
+    while (i <= right) {
+        if (nums[i] == 0) {
+            swap(nums, left, i);
+            i++;
+            left++;
+        } else if (nums[i] == 1) {
+            i++;
+        } else {
+            swap(nums, right, i);
+            right--;
+        }
+    }
+    return;
+}
+
+int partitionArray(vector<int> &nums, int k) {
+        // write your code here
+    if (nums.size() == 0) {
+        return 0;
+    }
+    int left = 0;
+    int right = nums.size() - 1;
+    int size = nums.size();
+    while (left < right) {
+        if (nums[left] >= k && nums[right] < k) {    
+            int tmp = nums[left];
+            nums[left] = nums[right];
+            nums[right] = tmp;
+            left++;
+            right--;
+        } else {
+            while (left < right && nums[left] < k) {
+                left++;
+            }
+            while (left < right && nums[right] >= k) {
+                right--;
+            }
+        }
+    }
+    for (int i = 0; i < size; i++) {
+        if (nums[i] >= k) {
+            return i;
+        }
+    }
+    return size;
+}
+
+double helper(vector<int>& nums1, int m, vector<int>& nums2, int n, int k, int start1, int start2){
+        if(m > n)
+            return helper(nums2, n, nums1, m, k, start2, start1);
+        if(m == 0)
+            return nums2[k-1];
+        if(k == 1)
+            return min(nums1[start1], nums2[start2]);
+        int a = min(k/2, m);
+        int b = k-a;
+        if(nums1[a+start1-1] <= nums2[b+start2-1]){
+            return helper(nums1, m-a, nums2, n, k-a, start1+a, start2);
+        }
+        else{
+            return helper(nums1, m, nums2, n-b, k-b, start1, start2+b);
+        }
+}
+
+double findMedianSortedArrays(vector<int>& nums1, vector<int>& nums2) {
+        int m = nums1.size(), n = nums2.size();
+        int total = m+n;
+        if(total%2 == 1)
+            return helper(nums1, m, nums2, n, total/2+1, 0, 0);
+        else
+            return (helper(nums1, m, nums2, n, total/2, 0, 0) + helper(nums1, m, nums2, n, total/2+1, 0, 0))/2;
+}
+
+int largestRectangleArea(vector<int> &height) {
+    // write your code here
+    int n = height.size();
+    stack<int> s;
+
+    int max_area = 0;
+    int top_stack;
+    int area_with_top;
+
+    int i = 0;
+    while (i < n) {
+        if (s.empty() || height[s.top()] <= height[i]) {
+            s.push(i);
+            i++;
+        } else {
+            top_stack = s.top();
+            s.pop();
+
+            area_with_top = height[top_stack] * (s.empty() ? i : i - s.top() - 1);
+
+            if (max_area < area_with_top) {
+                max_area = area_with_top;
+            }
+        }
+    }
+
+    while (!s.empty()) {
+        top_stack = s.top();
+        s.pop();
+
+        area_with_top = height[top_stack] * (s.empty() ? i : i - s.top() - 1);
+
+        if (max_area < area_with_top) {
+            max_area = area_with_top;
+        }
+    }
+    return max_area;
+}
+
+int main(){
     
  
     return 0;
