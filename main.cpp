@@ -4845,9 +4845,163 @@ int largestRectangleArea(vector<int> &height) {
     return max_area;
 }
 
-int main(){
+/*
+先取到 所有的number 再rehash
+*/
+vector<ListNode*> rehashing(vector<ListNode*> hashTable) {
+    // write your code here
+    int old_size = hashTable.size();
+    vector<int> values;
+    for (int i = 0; i < old_size; i++) {
+        if (hashTable[i] == NULL) {
+            continue;
+        } else {
+            values.push_back(hashTable[i] -> val);
+            ListNode * head = hashTable[i];
+            head = head -> next;
+            while (head) {
+                values.push_back(head -> val);
+                head = head -> next;
+            }
+        }
+    }
+    cout << "values.size(): " << values.size() << endl;
+    int new_size = 2 * old_size;
+    vector<ListNode*> results(new_size);
+    for (unsigned long i = 0; i < values.size(); i++) {
+        int hash_value;
+        if (values[i] >= 0) {
+            hash_value = values[i] % new_size;
+        } else {
+            hash_value = (values[i] % new_size + new_size) % new_size;
+        }
+        ListNode * tmp = new ListNode(values[i]);
+        if (results[hash_value] == NULL) {
+            results[hash_value] = tmp;
+        } else {
+            ListNode *cur = results[hash_value];
+            while (cur -> next != NULL) {
+                cur = cur -> next;
+            }
+            cur -> next = tmp;
+        }
+    }
+    return results;
+}
+
+
+
+// struct Node {
+//         int key;
+//         Node *pre;
+//         Node *post;
+//         Node(int x) : key(x), pre(NULL), post(NULL) {}
+// };
+
+// class LRUCache{
+// public: 
+//     Node * head = new Node(0);
+//     Node * end = new Node(0);
+//     head -> pre = NULL;
+//     head -> post = end;
+//     end -> pre = head;
+//     end -> post = NULL;
+
+//     unordered_map<int, int> m;
+//     unsigned long size;
+//     unsigned long count = 0;
+
+//     LRUCache(int capacity) {
+//         size = capacity;
+//     }
     
- 
+//     int get(int key) {
+//         if (m.find(key) != m.end()) {
+//             Node * tmp = new Node(key);
+//             tmp -> pre = head;
+//             tmp -> post = head -> post;
+//             if (end -> pre == head) {
+//                 end -> pre = tmp;
+//             }
+//             head -> post -> pre = tmp;
+//             head -> post = tmp;
+//             count++;
+//             if (count > size) {
+//                 end -> pre = end -> pre -> pre;
+//                 count--;
+//             }
+//             return m[key];
+//         } else {
+//             return -1;
+//         }
+//     }
+    
+//     void set(int key, int value) {
+//         if (m.find(key) != m.end()) {
+//             Node * tmp = new Node(key);
+//             tmp -> pre = head;
+//             tmp -> post = head -> post;
+//             if (end -> pre == head) {
+//                 end -> pre = tmp;
+//             }
+//             head -> post -> pre = tmp;
+//             head -> post = tmp;
+//             count++;
+//             if (count > size) {
+//                 end -> pre = end -> pre -> pre;
+//                 count--;
+//             }
+//             m[key] = value;
+//         } else {
+//             Node * tmp = new Node(key);
+//             tmp -> pre = head;
+//             tmp -> post = head -> post;
+//             if (end -> pre == head) {
+//                 end -> pre = tmp;
+//             }
+//             head -> post -> pre = tmp;
+//             head -> post = tmp;
+//             count++;
+//             if (count > size) {
+//                 end -> pre = end -> pre -> pre;
+//                 count--;
+//             }
+//             m[key] = value;
+//         }
+//     }
+// };
+
+
+int nthUglyNumber(int n) {
+    int *uglys = new int[n];
+    uglys[0] = 1;
+    int next = 1;
+    int *p2 = uglys;
+    int *p3 = uglys;
+    int *p5 = uglys;
+    while (next < n) {
+        int m = min(min(*p2 * 2, *p3 * 3), *p5 * 5);
+        uglys[next] = m;
+        while (*p2 * 2 <= uglys[next]) {
+            p2++;
+        }
+        while (*p3 * 3 <= uglys[next]) {
+            p3++;
+        }
+        while (*p5 * 5 <= uglys[next]) {
+            p5++;
+        }
+        next++;
+    }
+    int nth = uglys[n - 1];
+    delete[] uglys;
+    return nth;
+}
+
+
+int main(){
+
+
     return 0;
 }
 
