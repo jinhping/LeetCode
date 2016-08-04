@@ -4998,9 +4998,122 @@ int nthUglyNumber(int n) {
     return nth;
 }
 
+vector<int> topk(vector<int>& nums, int k) {
+    // Write your code here
+    priority_queue<int> pq;
+    for (int x : nums) {
+        pq.push(x);
+    }
+    vector<int> results;
+    while (k != 0) {
+        k--;
+        results.push_back(pq.top());
+        pq.pop();
+    }
+    return results;
+}
+
+/*
+O(nlogk）
+
+*/
+
+    
+struct Element {
+    unsigned long row;
+    unsigned long col;
+    int val;
+    Element(int row, int col, int val) {
+        this -> row = row;
+        this -> col = col;
+        this -> val = val;
+    }
+};
+
+struct Greater
+{
+  bool operator()(const Element& lhs, const Element& rhs) const
+  {
+    return lhs.val > rhs.val;
+  }
+};
+
+vector<int> mergekSortedArrays(vector<vector<int>>& arrays) {
+    // Write your code here
+    int size = 0;
+    priority_queue<Element, vector<Element>, Greater> pq;
+    for (unsigned long i = 0; i < arrays.size(); i++) {
+        if (arrays[i].size() > 0) {
+            Element tmp(i, 0, arrays[i][0]);
+            pq.push(tmp);
+            size += arrays[i].size();
+        }
+    }
+    vector<int> results(size);
+    int next = 0;
+    while (!pq.empty()) {
+        Element min = pq.top();
+        pq.pop();
+        results[next++] = min.val;
+        if (min.col + 1 < arrays[min.row].size()) {
+            min.col++;
+            min.val = arrays[min.row][min.col];
+            pq.push(min);
+        }
+    }
+    return results;
+}
+
+struct DirectedGraphNode {
+    int label;
+    vector<DirectedGraphNode *> neighbors;
+    DirectedGraphNode(int x) : label(x) {};
+};
+
+void dfs(DirectedGraphNode * i, vector<DirectedGraphNode*> &results, 
+    vector<DirectedGraphNode*> graph, map<DirectedGraphNode*, int> &m) 
+{
+    results.push_back(i);
+    m[i]--;
+    int size = i -> neighbors.size();
+    for (int j = 0; j < size; j++) {
+        m[i -> neighbors[j]]--;
+        if (m[i -> neighbors[j]] == 0) {
+            dfs(i -> neighbors[j], results, graph, m);
+        }
+    }
+}
+
+vector<DirectedGraphNode*> topSort(vector<DirectedGraphNode*> graph) {
+    // write your code here
+    //count number of neighbors
+    map<DirectedGraphNode*, int> m;
+    vector<DirectedGraphNode*> results;
+    int size = graph.size();
+    for (int i = 0; i < size; i++) {
+        for (DirectedGraphNode * n : graph[i] -> neighbors) {
+            if (m.find(n) == m.end()) {
+                m[n] = 1;
+            } else {
+                m[n] = m[n] + 1;
+            }
+        }
+    }
+    //find the starting node;
+    for (DirectedGraphNode * i : graph) {
+        if (m[i] == 0) {
+            dfs(i, results, graph, m);
+        }
+    }
+    return results;
+}
+
+vector<vector<string> > solveNQueens(int n) {
+    // write your code here
+    
+}
 
 int main(){
-
 
     return 0;
 }
