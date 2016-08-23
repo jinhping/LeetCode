@@ -5108,13 +5108,137 @@ vector<DirectedGraphNode*> topSort(vector<DirectedGraphNode*> graph) {
     return results;
 }
 
-vector<vector<string> > solveNQueens(int n) {
-    // write your code here
-    
+struct UndirectedGraphNode {
+    int label;
+    vector<UndirectedGraphNode *> neighbors;
+    UndirectedGraphNode(int x) : label(x) {};
+ };
+
+int sixDegrees(vector<UndirectedGraphNode*> graph,
+                   UndirectedGraphNode* s,
+                   UndirectedGraphNode* t) {
+    // Write your code here
+    vector<UndirectedGraphNode*> unused = graph;
+    map<UndirectedGraphNode*, int> m;
+    queue<UndirectedGraphNode*> q;
+
+    if (s == t) {
+        return 0;
+    }
+    m[s] = 0;
+    q.push(s);
+    while (!q.empty()) {
+        UndirectedGraphNode * node = q.front();
+        q.pop();
+        int step = m[node];
+        for (unsigned long i = 0; i < node->neighbors.size(); i++) {
+            if (m.find(node->neighbors[i]) != m.end()) {
+                continue;
+            }
+            m[node->neighbors[i]] = step + 1;
+            q.push(node->neighbors[i]);
+            if (node->neighbors[i] == t) {
+                return step + 1;
+            }
+        }
+    }
+    return -1;
+}
+
+TreeNode* cloneTree(TreeNode *root) {
+    // Write your code here
+    TreeNode * tmp = NULL;
+    if (root) {
+        tmp = new TreeNode(root -> val);
+        tmp -> left = cloneTree(root -> left);
+        tmp -> right = cloneTree(root -> right);
+    }
+    return tmp;
+}
+
+bool cmp(const string s1, const string s2) {
+    return (s1 + s2) < (s2 + s1);
+}
+
+string minNumber(vector<int>& nums) {
+    // Write your code here
+    vector<string> s_nums(nums.size());
+    stringstream stream;
+    for (unsigned long i = 0; i < nums.size(); ++i) {
+        stream << nums[i];
+        stream >> s_nums[i];
+        stream.clear();
+    }
+    sort(s_nums.begin(), s_nums.end(), cmp);
+    string result;
+    for (unsigned long i = 0; i < s_nums.size(); ++i) {
+        result += s_nums[i];
+    }
+    cout << result << endl;
+    string res;
+    bool flag = false;
+    for (unsigned long i = 0; i < result.size(); ++i) {
+        if (result[i] != '0') {
+            res.push_back(result[i]);
+            flag = true;
+        } else if (flag) {
+            res.push_back(result[i]);
+        }
+    }
+    if (!flag) res.push_back('0');
+    return res;
+}
+
+/*
+get length of ramsonNote and length of magazine
+compare length; if not magazine length shorter, return false;
+hash table each letter in ransomNote and count nums
+hash table each letter in magazine and count nums
+loop through ransomNote string
+  check whether letter exists in magazine, if not, return false;
+  check nums of that letter <= nums of letter in magazine or not; 
+  if not return false;
+otherwise, return true;
+*/
+bool canConstruct(string ransomNote, string magazine) {
+    int length_ransomNote = ransomNote.length();
+    int length_magazine = magazine.length();
+    if (length_ransomNote > length_magazine) {
+        return false;
+    }
+    map<char, int> hashTable_ransomNote;
+    map<char, int> hashTable_magazine;
+    for (int i = 0; i < length_ransomNote; i++) {
+        if (hashTable_ransomNote.find(ransomNote[i]) == hashTable_ransomNote.end()) {
+            hashTable_ransomNote[ransomNote[i]] = 1;
+        } else {
+            hashTable_ransomNote[ransomNote[i]] += 1;
+        }
+    }
+    for (int i = 0; i < length_magazine; i++) {
+        if (hashTable_magazine.find(magazine[i]) == hashTable_magazine.end()) {
+            hashTable_magazine[magazine[i]] = 1;
+        } else {
+            hashTable_magazine[magazine[i]] += 1;
+        }
+    }
+    for (int i = 0; i < length_ransomNote; i++) {
+        if (hashTable_magazine.find(ransomNote[i]) == hashTable_magazine.end()) {
+            return false;
+        }
+        if (hashTable_magazine[ransomNote[i]] < hashTable_ransomNote[ransomNote[i]]) {
+            return false;
+        }
+    }
+    return true;
+}
+
+int firstUniqChar(string s) {
+        
 }
 
 int main(){
-
+   
     return 0;
 }
 
