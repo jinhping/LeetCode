@@ -5233,12 +5233,100 @@ bool canConstruct(string ransomNote, string magazine) {
     return true;
 }
 
+/*
+loop through string s, create a hash_table to count how many times a letter exists
+loop through string s, again, map each char if char appears == 1 return index; 
+otherwise return -1
+*/
 int firstUniqChar(string s) {
-        
+    map<char, int> m;
+    int length = s.length();
+    for (int i = 0; i < length; i++) {
+        if (m.find(s[i]) == m.end()) {
+            m[s[i]] = 1;
+        } else {
+            m[s[i]] += 1;
+        }
+    }
+    for (int i = 0; i < length; i++) {
+        if (m[s[i]] == 1) {
+            return i;
+        }
+    }
+    return -1;
+} 
+
+/*
+A      E
+ B   d   f
+   c
+*/
+string convert(string s, int numRows) {
+    if (numRows <= 1) {
+        return s;
+    }
+    vector<vector<char>> container(numRows);
+    int length = s.length();
+    int row = 0;
+    int step = 1;
+    for (int i = 0; i < length; i++) {
+        if (row == 0) {
+            step = 1;
+        } else if (row == numRows - 1) {
+            step = -1;
+        }
+        container[row].push_back(s[i]);
+        row += step;
+    }
+    string result = "";
+    for (int i = 0; i < numRows; i++) {
+        for (unsigned long j = 0; j < container[i].size(); j++) {
+            result += container[i][j];
+        }
+    }
+    return result;      
+}
+
+void search_leaf(TreeNode *&root, vector<int> &container) {
+    if (root -> left == NULL && root -> right == NULL) {
+        container.push_back(root -> val);
+        root = NULL;
+    } else {
+        if (root -> left != NULL) {
+            search_leaf(root -> left, container);
+        }
+        if (root -> right != NULL) {
+            search_leaf(root -> right, container);
+        }    
+    } 
+}
+
+/*
+create a vector vector
+recurively preorder  go through the tree, 
+if two children are NULL, push into to vector,  node == NULL
+*/
+vector<vector<int>> findLeaves(TreeNode* root) {
+    vector<vector<int>> results; 
+
+    while (root != NULL) {
+        vector<int> container;
+        search_leaf(root, container);
+        results.push_back(container);
+    }
+    return results;
 }
 
 int main(){
-   
+    TreeNode * root = new TreeNode(1);
+    root -> left = new TreeNode(2);
+    vector<vector<int>> res = findLeaves(root);
+    for (unsigned long i = 0; i < res.size(); i++) {
+        for (unsigned long j = 0; j < res[i].size(); j++) {
+            cout << res[i][j] << " ";
+        }
+        cout << endl;
+    }
     return 0;
 }
 
