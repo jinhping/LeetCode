@@ -5317,16 +5317,47 @@ vector<vector<int>> findLeaves(TreeNode* root) {
     return results;
 }
 
-int main(){
-    TreeNode * root = new TreeNode(1);
-    root -> left = new TreeNode(2);
-    vector<vector<int>> res = findLeaves(root);
-    for (unsigned long i = 0; i < res.size(); i++) {
-        for (unsigned long j = 0; j < res[i].size(); j++) {
-            cout << res[i][j] << " ";
+/*
+create a vector of 0 with length;
+loop through updates, updates line by line
+*/
+vector<int> getModifiedArray(int length, vector<vector<int>>& updates) {
+    // vector<int> result(length, 0);
+    // int rows = updates.size();
+    // for (int i = 0; i < rows; i++) {
+    //     for (int j = updates[i][0]; j <= updates[i][1]; j++) {
+    //         result[j] = result[j] + updates[i][2];
+    //     }
+    // }
+    // return result;
+
+    int rows = updates.size();
+    vector<int> res(length, 0);
+    for (int i = 0; i < rows; i++) {
+        int value = updates[i][2];
+        int start = updates[i][0];
+        int end = updates[i][1];
+        res[start] += value; 
+        if (end < length - 1) {
+            res[end + 1] -= value;
         }
-        cout << endl;
     }
+    int sum = 0;
+    for (unsigned long i = 0; i < res.size(); i++) {
+        sum += res[i];
+        res[i] = sum;
+    }
+    return res;
+}
+
+int main(){
+    int length = 5;
+    vector<vector<int>> updates = {{1,3,2},{2,4,3},{0,2,-2}};
+    vector<int> tmp = getModifiedArray(length, updates);
+    for (auto x : tmp) {
+        cout << x << " ";
+    }
+    cout << endl; 
     return 0;
 }
 
