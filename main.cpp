@@ -31,6 +31,7 @@ int singleNumber(vector<int>& nums) {
     return 0;
 
 }
+
 bool checkValid(string s ){
 
     int count1 = 0;
@@ -5350,14 +5351,66 @@ vector<int> getModifiedArray(int length, vector<vector<int>>& updates) {
     return res;
 }
 
-int main(){
-    int length = 5;
-    vector<vector<int>> updates = {{1,3,2},{2,4,3},{0,2,-2}};
-    vector<int> tmp = getModifiedArray(length, updates);
-    for (auto x : tmp) {
-        cout << x << " ";
+ListNode *reverse(ListNode *head) {
+    ListNode *pre = head;
+    if (head -> next == NULL) {
+        return head;
     }
-    cout << endl; 
+    ListNode *cur = head -> next;
+    ListNode *next = cur -> next;
+    pre -> next = NULL;
+    while (cur != NULL) {
+        cur -> next = pre;
+        pre = cur;
+        cur = next;
+    }
+    return pre;
+}
+
+/*
+reverse the head
+1 2 3
+3 2 1
++ 1
+reverse back
+*/
+ListNode* plusOne(ListNode* head) {
+   ListNode *dummy = reverse(head);
+   ListNode *cur = dummy;
+   int carry = 0;
+   while (cur != NULL) {
+        if (cur -> val + 1 + carry < 10) {
+            cur -> val = cur -> val + 1;
+        } else if (cur -> val + 1 + carry == 10) {
+            carry = 1;
+            cur -> val = 0;
+        }
+        if (cur -> next == NULL && cur -> val == 0) {
+            cur -> next = new ListNode(1);
+        }
+        cur = cur -> next;
+   }
+   ListNode *res = reverse(dummy);
+   return res;
+}
+
+bool pairExist(vector<int> &a, int sum) {
+
+    unordered_set<int> s;
+    for (unsigned long i = 0; i < a.size(); i++) {
+        int tmp = sum - a[i];
+        s.insert(a[i]);
+        if (s.find(tmp) != s.end()) {
+            return true;
+        }
+    }
+    return false;
+}
+
+
+
+int main(){
+    
     return 0;
 }
 
