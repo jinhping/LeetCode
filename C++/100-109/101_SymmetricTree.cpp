@@ -9,30 +9,33 @@
  */
 class Solution {
 public:
-    vector<vector<int>> levelOrder(TreeNode* root) {
-        vector<vector<int>> results;
+    bool isSymmetric(TreeNode* root) {
         if (root == NULL) {
-            return results;
+            return true;
         }
-        queue<TreeNode*> q;
-        q.push(root);
-        while (!q.empty()) {
-            vector<int> path;
-            int size = q.size();
-            while (size != 0) {
-                TreeNode * front = q.front();
-                if (front -> left != NULL) {
-                    q.push(front -> left);
-                }
-                if (front -> right != NULL) {
-                    q.push(front -> right);
-                }
-                q.pop();
-                path.push_back(front -> val);
-                size--;
+        queue<TreeNode*> q1;
+        queue<TreeNode*> q2;
+        q1.push(root -> left);
+        q2.push(root -> right);
+        while (!q1.empty() && !q2.empty()) {
+            TreeNode * left = q1.front();
+            TreeNode * right = q2.front();
+            q1.pop();
+            q2.pop();
+            if (left == NULL && right == NULL) {
+                continue;
             }
-            results.push_back(path);
+            if (left == NULL || right == NULL) {
+                return false;
+            }
+            if (left -> val != right -> val) {
+                return false;
+            }
+            q1.push(left -> left);
+            q1.push(left -> right);
+            q2.push(right -> right);
+            q2.push(right -> left);
         }
-        return results;
+        return true;
     }
 };
