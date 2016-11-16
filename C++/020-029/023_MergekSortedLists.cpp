@@ -19,7 +19,7 @@ public:
             l1 -> next = merge2Lists(l1 -> next, l2);
             return l1;
         } else {
-            l2 -> next = merge2Lists(l2 -> next, l1);
+            l2 -> next = merge2Lists(l1, l2 -> next);
             return l2;
         }
     }
