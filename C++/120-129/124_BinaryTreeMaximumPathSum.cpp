@@ -1,3 +1,4 @@
+//Solution 1
 /**
  * Definition for a binary tree node.
  * struct TreeNode {
@@ -31,5 +32,53 @@ public:
         int max = INT_MIN; 
         helper(root, max);
         return max;
+    }
+};
+
+
+//Solution 2
+class Solution {
+public:
+    /**
+     * @param root: The root of binary tree.
+     * @return: An integer
+     */
+    int max_helper(TreeNode *root, int &maxSum) {
+        if (root == NULL) {
+            return 0;
+        }
+        int left = max(0,max_helper(root->left,maxSum));
+        int right = max(0,max_helper(root->right, maxSum));
+        maxSum = max(maxSum, left + right + root->val);
+        return max(left, right) + root->val;
+    }
+    
+    int maxPathSum(TreeNode* root) {
+        int maxSum = INT_MIN;
+        max_helper(root, maxSum);
+        return maxSum;       
+    }
+};
+
+//Follow up: if node is from root to any node
+class Solution {
+public:
+    /**
+     * @param root the root of binary tree.
+     * @return an integer
+     */
+    int max_helper(TreeNode *root, int maxSum) {
+        if (root == NULL) {
+            return 0;
+        }
+        int left = max_helper(root->left,maxSum);
+        int right = max_helper(root->right, maxSum);
+        maxSum = max(0, max(left, right)) + root->val + maxSum;
+        return maxSum;
+    }
+    int maxPathSum2(TreeNode *root) {
+        int maxSum = 0;
+        maxSum = max_helper(root, maxSum);
+        return maxSum;   
     }
 };
