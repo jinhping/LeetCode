@@ -1,3 +1,35 @@
+//Best Solution
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    //Simply find the one just larger than p's value; 
+    TreeNode* inorderSuccessor(TreeNode* root, TreeNode* p) {
+        if (root == NULL || p == NULL) {
+            return NULL;
+        }
+        TreeNode * succ = NULL;
+        while (root != NULL) {
+            if (root -> val <= p -> val) {
+                root = root -> right;
+            } else {
+                succ = root;
+                root = root -> left;
+            }
+        }
+        return succ;
+    }
+};
+
+
+//Good one
 /**
  * Definition for a binary tree node.
  * struct TreeNode {
