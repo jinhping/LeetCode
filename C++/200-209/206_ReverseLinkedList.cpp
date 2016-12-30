@@ -6,25 +6,22 @@
  *     ListNode(int x) : val(x), next(NULL) {}
  * };
  */
-
 class Solution {
 public:
     ListNode* reverseList(ListNode* head) {
-        if (head == NULL) {
+        if (head == NULL || head -> next == NULL) {
             return head;
         }
-        if (head -> next == NULL) {
-            return head;
+        ListNode * pre = head;
+        ListNode * cur = head -> next;
+        ListNode * nextNode;
+        pre -> next = NULL;
+        while (cur != NULL) {
+            nextNode = cur -> next;
+            cur -> next = pre;
+            pre = cur;
+            cur = nextNode;
         }
-        ListNode * second = head -> next;
-        head -> next = NULL;
-        while (second -> next != NULL) {
-            ListNode * third = second -> next;
-            second -> next = head;
-            head = second;
-            second = third;
-        }
-        second -> next = head;
-        return second;
+        return pre;
     }
 };
