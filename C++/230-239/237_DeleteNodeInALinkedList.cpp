@@ -1,3 +1,4 @@
+//Solution 1
 /**
  * Definition for singly-linked list.
  * struct ListNode {
@@ -17,6 +18,15 @@ public:
         ListNode *second = node -> next;
         node -> val = second -> val; 
         node -> next = second -> next;
-        return;
+        delete second;
+    }
+};
+
+
+//Solution 2
+class Solution {
+public:
+    void deleteNode(ListNode* node) {
+        * node = * (node -> next);
     }
 };
