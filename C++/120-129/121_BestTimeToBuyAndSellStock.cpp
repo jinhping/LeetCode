@@ -5,14 +5,13 @@ public:
             return 0;
         }
         int max = 0;
-        int min = prices[0];
-        for (int x : prices) {
-            if (x < min) {
-                min = x;
+        int low = prices[0];
+        for (auto x : prices) {
+            if (x < low) {
+                low = x;
             }
-            int tmp = x - min;
-            if(tmp > max) {
-                max = tmp;
+            if (x - low > max) {
+                max = x - low;
             }
         }
         return max;
