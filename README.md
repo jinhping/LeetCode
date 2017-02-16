@@ -1,5 +1,7 @@
 # Leetcode
 
-main.cpp includes my first try for leetcode questions
+C++ folder is for backup of my leetcode questions written in C++
 
-C++ folder is mainly for backup of my leetcode questions
+Java folder is for backup of my leetcode questions written in Java
+
+main.cpp is a scratch place for my first try of leetcode questions
